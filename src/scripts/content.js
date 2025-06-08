@@ -157,13 +157,13 @@ function main(app, common, lang, modules) {
 		const queueCount = filterState.settings.queue_count || common.default_queue_count;
 
 		if (!common.isSubscriptions(location.href)) {
-			console.log('Not on subscriptions page, trying anyway...');
+			// REMOVED: console.log('Not on subscriptions page, trying anyway...');
 		}
 
 		// Find the contents container
 		const contentsContainer = browse.querySelector('#contents');
 		if (!contentsContainer) {
-			console.log('Could not find #contents container');
+			// REMOVED: console.log('Could not find #contents container');
 			return;
 		}
 
@@ -181,13 +181,13 @@ function main(app, common, lang, modules) {
 			const isVisible = computedStyle.display !== 'none';
 
 			if (!isVisible) {
-				console.log(`Skipping hidden video element`);
+				// REMOVED: console.log(`Skipping hidden video element`);
 				continue;
 			}
 
 			// Skip if we've already processed this exact element
 			if (seenElements.has(videoElement)) {
-				console.log(`Skipping already processed element`);
+				// REMOVED: console.log(`Skipping already processed element`);
 				continue;
 			}
 
@@ -211,10 +211,10 @@ function main(app, common, lang, modules) {
 						? titleElement
 						: videoElement.querySelector('a[href*="/watch"], a[href*="/shorts"]');
 				} else {
-					console.log(`#video-title element found but no text content`);
+					// REMOVED: console.log(`#video-title element found but no text content`);
 				}
 			} else {
-				console.log(`Could not find #video-title element in video`);
+				// REMOVED: console.log(`Could not find #video-title element in video`);
 			}
 
 			// Clean up the title (remove extra whitespace, normalize)
@@ -227,17 +227,17 @@ function main(app, common, lang, modules) {
 					seenElements.add(videoElement);
 					visibleVideos.push(videoElement);
 				} else {
-					console.log(`Skipping duplicate video with title: "${videoTitle}"`);
+					// REMOVED: console.log(`Skipping duplicate video with title: "${videoTitle}"`);
 				}
 			} else {
-				console.log(`Could not find video title or link in element`);
+				// REMOVED: console.log(`Could not find video title or link in element`);
 			}
 		}
 
 		const topNVideos = visibleVideos.slice(0, queueCount);
 
 		if (topNVideos.length === 0) {
-			console.log('No videos found to queue');
+			// REMOVED: console.log('No videos found to queue');
 			return;
 		}
 
@@ -296,7 +296,7 @@ function main(app, common, lang, modules) {
 							}
 						}, 300);
 					} else {
-						console.log(`Could not find menu button for video ${index + 1}`);
+						// REMOVED: console.log(`Could not find menu button for video ${index + 1}`);
 					}
 				} catch (error) {
 					console.error(`Error queueing video ${index + 1}:`, error);
@@ -881,13 +881,7 @@ function main(app, common, lang, modules) {
 		menu.appendChild(select);
 
 		// Queue Top N Button - show based on settings
-		console.log('Creating menu - checking if on subscriptions page:', {
-			currentUrl: location.href,
-			isSubscriptions: common.isSubscriptions(location.href),
-		});
-
 		if (common.isSubscriptions(location.href)) {
-			console.log('Creating Queue Top N button');
 			const queueCount = filterState.settings.queue_count || common.default_queue_count;
 			const buttonText = (filterState.settings.button_label_queue_top_n || common.button_label.queue_top_n).replace(
 				'N',
@@ -895,9 +889,6 @@ function main(app, common, lang, modules) {
 			);
 			const queueTopNButton = createQueueTopNButton(browse, common, handleQueueTopN, queueCount, buttonText);
 			menu.appendChild(queueTopNButton);
-			console.log('Queue Top N button created and added to menu');
-		} else {
-			console.log('Not on subscriptions page, skipping Queue Top N button creation');
 		}
 
 		const input = createQueryInput(menu, browse, filterState);

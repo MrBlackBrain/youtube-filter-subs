@@ -176,7 +176,6 @@ export function createNodeForCalc(menu) {
 }
 
 export function createQueueTopNButton(browse, common, queueHandler, queueCount, buttonText) {
-	console.log('createQueueTopNButton called');
 	const button = document.createElement('span');
 	button.classList.add('filter-button', 'filter-queue-top-n', 'queue_top_n');
 	button.innerText = buttonText || `Queue Top ${queueCount}`;
@@ -187,6 +186,5 @@ export function createQueueTopNButton(browse, common, queueHandler, queueCount, 
 		queueHandler(browse);
 	});
 
-	console.log('Queue Top N button created');
 	return button;
 }
