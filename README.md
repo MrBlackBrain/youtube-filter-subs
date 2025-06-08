@@ -53,6 +53,41 @@ This project is a fork of [yudai-tiny-developer/filter](https://github.com/yudai
 5.  Select the directory where you cloned or unzipped the repository.
 6.  The extension will now be installed and active.
 
+## Project Structure
+
+The project follows a modern source folder structure:
+
+```
+src/
+├── _locales/          # Internationalization files
+├── icons/            # Extension icons
+├── lang/             # Language-specific JavaScript files
+├── scripts/          # Main JavaScript files
+│   ├── lib/          # Core functionality modules
+│   │   ├── config.js
+│   │   ├── mode-management.js
+│   │   ├── query-handling.js
+│   │   ├── state.js
+│   │   ├── status-classification.js
+│   │   ├── ui-creation.js
+│   │   ├── utils.js
+│   │   └── visibility-management.js
+│   ├── common.js     # Shared utilities and constants
+│   ├── content.js    # Content script (main extension logic)
+│   ├── popup.js      # Popup/settings page script
+│   ├── progress.js   # Progress bar functionality
+│   └── settings.js   # Settings management
+├── styles/           # CSS files
+│   ├── content.css   # Content script styles
+│   └── popup.css     # Popup/settings page styles
+└── popup.html        # Settings page HTML
+```
+
+## Development
+
+- **Linting**: Run `pnpm run lint` to check code quality
+- **Building**: Run `pnpm run build` to create optimized builds of all JavaScript files in the `dist/` directory
+
 ## License
 
 This project is dual-licensed under the [MIT License](LICENSE-MIT) and the [Apache 2.0 License](LICENSE-APACHE).

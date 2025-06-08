@@ -1,6 +1,6 @@
-import(chrome.runtime.getURL("common.js")).then((common) =>
-	import(chrome.runtime.getURL("settings.js")).then((settings) =>
-		import(chrome.runtime.getURL("progress.js")).then((progress) =>
+import(chrome.runtime.getURL("src/scripts/common.js")).then((common) =>
+	import(chrome.runtime.getURL("src/scripts/settings.js")).then((settings) =>
+		import(chrome.runtime.getURL("src/scripts/progress.js")).then((progress) =>
 			chrome.storage.local.get(common.storage, (data) => main(common, settings, progress, data))
 		)
 	)

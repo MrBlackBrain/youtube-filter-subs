@@ -29,7 +29,7 @@ export function updatePopupQueryRegex(containers, query, filterState, getPopupKe
 function parseQuery(query) {
 	const queryList = [];
 	const notQueryList = [];
-	const tokenList = query.replace(/[.*+?^=!:${}()[\]\/\\]/g, "\\$&").match(/[^\s|\-"]+|"([^"]*)"|\||\-/g);
+	const tokenList = query.replace(/[.*+?^=!:${}()[\]/\\]/g, "\\$&").match(/[^\s|"-]+|"([^"]*)"|\||-/g);
 	let nextOr = false;
 	let nextNot = false;
 

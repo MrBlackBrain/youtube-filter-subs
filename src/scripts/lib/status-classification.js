@@ -5,7 +5,7 @@ export function classifyStatus(node, lang) {
 		case "YTD-GRID-VIDEO-RENDERER":
 		case "YTD-VIDEO-RENDERER":
 		case "YTD-RICH-ITEM-RENDERER":
-		case "YTD-PLAYLIST-VIDEO-RENDERER":
+		case "YTD-PLAYLIST-VIDEO-RENDERER": {
 			const metadata_line = node.querySelector("div#metadata-line");
 			const byline_container = node.querySelector("div#byline-container");
 			const badge = node.querySelector("p.ytd-badge-supported-renderer");
@@ -55,8 +55,9 @@ export function classifyStatus(node, lang) {
 				}
 			}
 			break;
+		}
 
-		case "YTD-CHANNEL-RENDERER":
+		case "YTD-CHANNEL-RENDERER": {
 			const channel_notification = node.querySelector(
 				"ytd-subscription-notification-toggle-button-renderer-next button[aria-label]"
 			);
@@ -71,10 +72,12 @@ export function classifyStatus(node, lang) {
 				}
 			}
 			break;
+		}
 
-		case "YTM-SHORTS-LOCKUP-VIEW-MODEL-V2":
+		case "YTM-SHORTS-LOCKUP-VIEW-MODEL-V2": {
 			status.add("short");
 			break;
+		}
 	}
 	return status;
 }
@@ -86,7 +89,7 @@ export function classifyStatusProgress(node) {
 		case "YTD-GRID-VIDEO-RENDERER":
 		case "YTD-VIDEO-RENDERER":
 		case "YTD-RICH-ITEM-RENDERER":
-		case "YTD-PLAYLIST-VIDEO-RENDERER":
+		case "YTD-PLAYLIST-VIDEO-RENDERER": {
 			const progress = node.querySelector("div#progress");
 			if (progress) {
 				status.add("progress_watched");
@@ -94,6 +97,7 @@ export function classifyStatusProgress(node) {
 				status.add("progress_unwatched");
 			}
 			break;
+		}
 	}
 
 	return status;

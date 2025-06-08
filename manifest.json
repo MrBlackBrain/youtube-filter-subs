@@ -1,33 +1,33 @@
 {
 	"manifest_version": 3,
-	"name": "Subscription Feed Filter for YouTube",
-	"version": "1.45.3",
-	"description": "__MSG_appDesc__",
+	"name": "Youtube Filter for Subscriptions Feed",
+	"version": "2.0.0",
+	"description": "A browser extension to filter YouTube subscriptions.",
 	"default_locale": "en",
 	"icons": {
-		"16": "icons/16.png",
-		"48": "icons/48.png",
-		"128": "icons/128.png"
+		"16": "src/icons/16.png",
+		"48": "src/icons/48.png",
+		"128": "src/icons/128.png"
 	},
 	"content_scripts": [
 		{
-			"css": ["content.css"],
-			"js": ["content.js"],
+			"css": ["src/styles/content.css"],
+			"js": ["src/scripts/content.js"],
 			"run_at": "document_end",
 			"matches": ["https://www.youtube.com/*"]
 		}
 	],
 	"web_accessible_resources": [
 		{
-			"resources": ["common.js", "lang/*.js", "functions/*.js"],
+			"resources": ["src/scripts/common.js", "src/lang/*.js", "src/scripts/lib/*.js"],
 			"matches": ["https://www.youtube.com/*"]
 		}
 	],
 	"action": {
-		"default_popup": "popup.html"
+		"default_popup": "src/popup.html"
 	},
 	"options_ui": {
-		"page": "popup.html",
+		"page": "src/popup.html",
 		"open_in_tab": true
 	},
 	"permissions": ["storage"]

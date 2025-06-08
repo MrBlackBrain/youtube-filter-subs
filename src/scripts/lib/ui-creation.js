@@ -106,7 +106,7 @@ export function createQueryInput(menu, browse, filterState) {
 	);
 	input.id = "filter-query";
 	input.value = filterState.getActiveQuery(browse);
-	input.addEventListener("change", (e) => {
+	input.addEventListener("change", () => {
 		input.blur();
 		menu.requestSubmit();
 	});

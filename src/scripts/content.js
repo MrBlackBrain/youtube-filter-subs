@@ -1,14 +1,14 @@
 // Load all modules dynamically
 Promise.all([
-	import(chrome.runtime.getURL("functions/state.js")),
-	import(chrome.runtime.getURL("functions/config.js")),
-	import(chrome.runtime.getURL("functions/utils.js")),
-	import(chrome.runtime.getURL("functions/query-handling.js")),
-	import(chrome.runtime.getURL("functions/visibility-management.js")),
-	import(chrome.runtime.getURL("functions/ui-creation.js")),
-	import(chrome.runtime.getURL("functions/mode-management.js")),
-	import(chrome.runtime.getURL("functions/status-classification.js")),
-	import(chrome.runtime.getURL("common.js")),
+	import(chrome.runtime.getURL("src/scripts/lib/state.js")),
+	import(chrome.runtime.getURL("src/scripts/lib/config.js")),
+	import(chrome.runtime.getURL("src/scripts/lib/utils.js")),
+	import(chrome.runtime.getURL("src/scripts/lib/query-handling.js")),
+	import(chrome.runtime.getURL("src/scripts/lib/visibility-management.js")),
+	import(chrome.runtime.getURL("src/scripts/lib/ui-creation.js")),
+	import(chrome.runtime.getURL("src/scripts/lib/mode-management.js")),
+	import(chrome.runtime.getURL("src/scripts/lib/status-classification.js")),
+	import(chrome.runtime.getURL("src/scripts/common.js")),
 ])
 	.then(
 		([
@@ -23,7 +23,7 @@ Promise.all([
 			common,
 		]) => {
 			const lang = document.documentElement.getAttribute("lang");
-			import(chrome.runtime.getURL("lang/" + (lang ? lang : "en") + ".js"))
+			import(chrome.runtime.getURL("src/lang/" + (lang ? lang : "en") + ".js"))
 				.then((lang) => {
 					// Extract all the imports
 					const { filterState } = stateModule;
@@ -114,7 +114,6 @@ function main(app, common, lang, modules) {
 	// Extract modules for easier access
 	const {
 		filterState,
-		buttonLabels,
 		selectors,
 		display,
 		displayAny,
@@ -127,7 +126,6 @@ function main(app, common, lang, modules) {
 		searchParentNode,
 		getPopupKey,
 		updateQueryRegex,
-		updatePopupQueryRegex,
 		matchQuery,
 		matchPopupQuery,
 		updateVisibility,
@@ -136,16 +134,13 @@ function main(app, common, lang, modules) {
 		handleContinuationItem,
 		createSpacer,
 		createButton,
-		createButtonChannels,
 		createSelect,
 		createOption,
-		createSelectProgress,
-		createOptionProgress,
 		createQueryInput,
 		createQueryInputArea,
 		createSearchButton,
 		createLoadButtonContainer,
-		createSpinner,
+
 		createNodeForCalc,
 		changeMode,
 		changeModeProgress,
@@ -153,7 +148,6 @@ function main(app, common, lang, modules) {
 	} = modules;
 	// Initialize shared UI elements
 	const load_button_container = createLoadButtonContainer(common, filterState);
-	const spinner = createSpinner();
 
 	async function updateButtonVisibility(browse) {
 		await chrome.storage.local.get(common.storage).then((data) => {
@@ -376,7 +370,7 @@ function main(app, common, lang, modules) {
 		displayQuery(browse, "span.filter-query", display(filterState.settings.keyword));
 	}
 
-	function setPlaylistVisibility(browse, settings) {
+	function setPlaylistVisibility(browse) {
 		displayQuery(browse, "span.filter-button-subscriptions.all", "none");
 		displayQuery(browse, "span.filter-query", display(filterState.settings.keyword));
 	}
@@ -464,7 +458,6 @@ function main(app, common, lang, modules) {
 
 	async function onNodeLoaded(node, is_menu_target) {
 		// Handle different node types and update visibility
-		let n;
 		switch (node.nodeName) {
 			case "YTD-BROWSE":
 			case "YTD-SECTION-LIST-RENDERER":
@@ -779,13 +772,13 @@ function main(app, common, lang, modules) {
 		await onResize();
 	});
 
-	chrome.storage.onChanged.addListener(async (changes, namespace) => {
+	chrome.storage.onChanged.addListener(async () => {
 		for (const browse of app.querySelectorAll("ytd-browse")) {
 			await updateButtonVisibility(browse);
 		}
 	});
 
-	new MutationObserver((mutations, observer) => {
+	new MutationObserver((mutations) => {
 		const is_menu_target = isMenuTarget(common);
 		for (const m of mutations) {
 			onNodeLoaded(m.target, is_menu_target);

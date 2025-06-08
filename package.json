@@ -1,0 +1,24 @@
+{
+	"name": "youtube-filter-subs",
+	"version": "1.0.0",
+	"description": "A browser extension to filter YouTube subscriptions.",
+	"main": "src/scripts/common.js",
+	"scripts": {
+		"lint": "eslint . --ext .js",
+		"build": "esbuild src/scripts/**/*.js --outdir=dist --bundle --minify --format=esm"
+	},
+	"keywords": [
+		"youtube",
+		"extension",
+		"filter",
+		"subscriptions"
+	],
+	"author": "",
+	"license": "MIT",
+	"devDependencies": {
+		"@eslint/js": "^9.28.0",
+		"esbuild": "^0.25.5",
+		"eslint": "^9.28.0",
+		"globals": "^16.2.0"
+	}
+}
