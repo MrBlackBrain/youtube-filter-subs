@@ -1,88 +1,88 @@
 export const storage = [
-	"live",
-	"streamed",
-	"video",
-	"short",
-	"scheduled",
-	"notification_on",
-	"notification_off",
+	'live',
+	'streamed',
+	'video',
+	'short',
+	'scheduled',
+	'notification_on',
+	'notification_off',
 
-	"progress_unwatched",
-	"progress_watched",
+	'progress_unwatched',
+	'progress_watched',
 
-	"channels_all",
-	"channels_personalized",
-	"channels_none",
+	'channels_all',
+	'channels_personalized',
+	'channels_none',
 
-	"keyword",
+	'keyword',
 
-	"order",
+	'order',
 
-	"default_live",
-	"default_streamed",
-	"default_video",
-	"default_short",
-	"default_scheduled",
-	"default_notification_on",
-	"default_notification_off",
+	'default_live',
+	'default_streamed',
+	'default_video',
+	'default_short',
+	'default_scheduled',
+	'default_notification_on',
+	'default_notification_off',
 
-	"default_progress_unwatched",
-	"default_progress_watched",
+	'default_progress_unwatched',
+	'default_progress_watched',
 
-	"default_channels_all",
-	"default_channels_personalized",
-	"default_channels_none",
+	'default_channels_all',
+	'default_channels_personalized',
+	'default_channels_none',
 
-	"multiselection",
+	'multiselection',
 
-	"responsive",
+	'responsive',
 
-	"button_label_live",
-	"button_label_streamed",
-	"button_label_video",
-	"button_label_short",
-	"button_label_scheduled",
-	"button_label_notification_on",
-	"button_label_notification_off",
-	"button_label_progress_unwatched",
-	"button_label_progress_watched",
+	'button_label_live',
+	'button_label_streamed',
+	'button_label_video',
+	'button_label_short',
+	'button_label_scheduled',
+	'button_label_notification_on',
+	'button_label_notification_off',
+	'button_label_progress_unwatched',
+	'button_label_progress_watched',
 
-	"default_keyword",
+	'default_keyword',
 
-	"limit",
+	'limit',
 
-	"keyword_add_playlist",
-	"keyword_sidebar_channels",
-	"keyword_notification",
+	'keyword_add_playlist',
+	'keyword_sidebar_channels',
+	'keyword_notification',
 
-	"queue_top_n",
-	"default_queue_top_n",
-	"button_label_queue_top_n",
-	"queue_count",
+	'queue_top_n',
+	'default_queue_top_n',
+	'button_label_queue_top_n',
+	'queue_count',
 ];
 
 export const default_order = [
-	"live",
-	"streamed",
-	"video",
-	"short",
-	"scheduled",
-	"notification_on",
-	"notification_off",
+	'live',
+	'streamed',
+	'video',
+	'short',
+	'scheduled',
+	'notification_on',
+	'notification_off',
 
-	"progress_unwatched",
-	"progress_watched",
+	'progress_unwatched',
+	'progress_watched',
 
-	"queue_top_n",
+	'queue_top_n',
 
-	"channels_all",
-	"channels_personalized",
-	"channels_none",
+	'channels_all',
+	'channels_personalized',
+	'channels_none',
 ];
 
 export function order(order) {
 	if (order) {
-		const dataOrder = order.split(",");
+		const dataOrder = order.split(',');
 		return dataOrder
 			.filter((i) => default_order.indexOf(i) !== -1)
 			.concat(default_order.filter((i) => dataOrder.indexOf(i) === -1));
@@ -92,46 +92,46 @@ export function order(order) {
 }
 
 export const button_label = {
-	all: chrome.i18n.getMessage("button_all"),
-	live: chrome.i18n.getMessage("button_live"),
-	streamed: chrome.i18n.getMessage("button_streamed"),
-	video: chrome.i18n.getMessage("button_video"),
-	short: chrome.i18n.getMessage("button_short"),
-	scheduled: chrome.i18n.getMessage("button_scheduled"),
-	notification_on: chrome.i18n.getMessage("button_notification_on"),
-	notification_off: chrome.i18n.getMessage("button_notification_off"),
+	all: chrome.i18n.getMessage('button_all'),
+	live: chrome.i18n.getMessage('button_live'),
+	streamed: chrome.i18n.getMessage('button_streamed'),
+	video: chrome.i18n.getMessage('button_video'),
+	short: chrome.i18n.getMessage('button_short'),
+	scheduled: chrome.i18n.getMessage('button_scheduled'),
+	notification_on: chrome.i18n.getMessage('button_notification_on'),
+	notification_off: chrome.i18n.getMessage('button_notification_off'),
 
-	progress_all: chrome.i18n.getMessage("button_progress_all"),
-	progress_unwatched: chrome.i18n.getMessage("button_progress_unwatched"),
-	progress_watched: chrome.i18n.getMessage("button_progress_watched"),
+	progress_all: chrome.i18n.getMessage('button_progress_all'),
+	progress_unwatched: chrome.i18n.getMessage('button_progress_unwatched'),
+	progress_watched: chrome.i18n.getMessage('button_progress_watched'),
 
-	channels_all: chrome.i18n.getMessage("button_channels_all"),
-	channels_personalized: chrome.i18n.getMessage("button_channels_personalized"),
-	channels_none: chrome.i18n.getMessage("button_channels_none"),
+	channels_all: chrome.i18n.getMessage('button_channels_all'),
+	channels_personalized: chrome.i18n.getMessage('button_channels_personalized'),
+	channels_none: chrome.i18n.getMessage('button_channels_none'),
 
-	clear: chrome.i18n.getMessage("button_clear"),
-	search: chrome.i18n.getMessage("button_search"),
+	clear: chrome.i18n.getMessage('button_clear'),
+	search: chrome.i18n.getMessage('button_search'),
 
-	keyword: chrome.i18n.getMessage("button_keyword"),
+	keyword: chrome.i18n.getMessage('button_keyword'),
 
-	visibility: chrome.i18n.getMessage("visibility"),
-	default: chrome.i18n.getMessage("default"),
+	visibility: chrome.i18n.getMessage('visibility'),
+	default: chrome.i18n.getMessage('default'),
 
-	placeholder: chrome.i18n.getMessage("button_placeholder"),
-	progress_placeholder: chrome.i18n.getMessage("button_progress_placeholder"),
-	multiselection: chrome.i18n.getMessage("multiselection"),
+	placeholder: chrome.i18n.getMessage('button_placeholder'),
+	progress_placeholder: chrome.i18n.getMessage('button_progress_placeholder'),
+	multiselection: chrome.i18n.getMessage('multiselection'),
 
-	responsive: chrome.i18n.getMessage("responsive"),
+	responsive: chrome.i18n.getMessage('responsive'),
 
-	limit: chrome.i18n.getMessage("limit"),
-	load: chrome.i18n.getMessage("load"),
+	limit: chrome.i18n.getMessage('limit'),
+	load: chrome.i18n.getMessage('load'),
 
-	keyword_add_playlist: chrome.i18n.getMessage("keyword_add_playlist"),
-	keyword_sidebar_channels: chrome.i18n.getMessage("keyword_sidebar_channels"),
-	keyword_notification: chrome.i18n.getMessage("keyword_notification"),
+	keyword_add_playlist: chrome.i18n.getMessage('keyword_add_playlist'),
+	keyword_sidebar_channels: chrome.i18n.getMessage('keyword_sidebar_channels'),
+	keyword_notification: chrome.i18n.getMessage('keyword_notification'),
 
-	queue_top_n: chrome.i18n.getMessage("button_queue_top_n") || "Queue Top N",
-	queue_count: chrome.i18n.getMessage("queue_count") || "Queue Count",
+	queue_top_n: chrome.i18n.getMessage('button_queue_top_n') || 'Queue Top N',
+	queue_count: chrome.i18n.getMessage('queue_count') || 'Queue Count',
 };
 
 export const default_live = true;
@@ -181,7 +181,7 @@ export const default_default_channels_all = false;
 export const default_default_channels_personalized = false;
 export const default_default_channels_none = false;
 
-export const default_default_keyword = "";
+export const default_default_keyword = '';
 
 export const default_default_queue_top_n = false;
 
@@ -212,48 +212,48 @@ function step(value, stepValue) {
 
 export function isSubscriptions(url) {
 	return (
-		url.startsWith("https://www.youtube.com/feed/subscriptions") &&
-		!url.startsWith("https://www.youtube.com/feed/subscriptions/shorts")
+		url.startsWith('https://www.youtube.com/feed/subscriptions') &&
+		!url.startsWith('https://www.youtube.com/feed/subscriptions/shorts')
 	);
 }
 
 export function isShorts(url) {
-	return url.startsWith("https://www.youtube.com/feed/subscriptions/shorts");
+	return url.startsWith('https://www.youtube.com/feed/subscriptions/shorts');
 }
 
 export function isLibrary(url) {
-	return url.startsWith("https://www.youtube.com/feed/library") || url.startsWith("https://www.youtube.com/feed/you");
+	return url.startsWith('https://www.youtube.com/feed/library') || url.startsWith('https://www.youtube.com/feed/you');
 }
 
 export function isHistory(url) {
-	return url.startsWith("https://www.youtube.com/feed/history");
+	return url.startsWith('https://www.youtube.com/feed/history');
 }
 
 export function isPlaylists(url) {
-	return url.startsWith("https://www.youtube.com/feed/playlists");
+	return url.startsWith('https://www.youtube.com/feed/playlists');
 }
 
 export function isPlaylist(url) {
-	return url.startsWith("https://www.youtube.com/playlist?");
+	return url.startsWith('https://www.youtube.com/playlist?');
 }
 
 export function isChannels(url) {
-	return url.startsWith("https://www.youtube.com/feed/channels");
+	return url.startsWith('https://www.youtube.com/feed/channels');
 }
 
 export function isChannel(url) {
 	return (
-		url.startsWith("https://www.youtube.com/channel/") ||
-		url.startsWith("https://www.youtube.com/c/") ||
-		url.startsWith("https://www.youtube.com/@") ||
-		url.startsWith("https://www.youtube.com/user/")
+		url.startsWith('https://www.youtube.com/channel/') ||
+		url.startsWith('https://www.youtube.com/c/') ||
+		url.startsWith('https://www.youtube.com/@') ||
+		url.startsWith('https://www.youtube.com/user/')
 	);
 }
 
 export function isHashTag(url) {
-	return url.startsWith("https://www.youtube.com/hashtag/");
+	return url.startsWith('https://www.youtube.com/hashtag/');
 }
 
 export function isTop(url) {
-	return url.split("?")[0] === "https://www.youtube.com/";
+	return url.split('?')[0] === 'https://www.youtube.com/';
 }

@@ -1,14 +1,14 @@
 export function display(value) {
-	return value === true ? "" : "none";
+	return value === true ? '' : 'none';
 }
 
 export function displayAny(values) {
 	for (const value of values) {
 		if (value) {
-			return "";
+			return '';
 		}
 	}
-	return "none";
+	return 'none';
 }
 
 export function displayQuery(node, query, displayValue) {

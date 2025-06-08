@@ -5,7 +5,8 @@
 	"main": "src/scripts/common.js",
 	"scripts": {
 		"lint": "eslint . --ext .js",
-		"build": "esbuild src/scripts/**/*.js --outdir=dist --bundle --minify --format=esm"
+		"build": "esbuild src/scripts/**/*.js --outdir=dist --bundle --minify --format=esm",
+		"format": "prettier --write ."
 	},
 	"keywords": [
 		"youtube",
@@ -19,6 +20,7 @@
 		"@eslint/js": "^9.28.0",
 		"esbuild": "^0.25.5",
 		"eslint": "^9.28.0",
-		"globals": "^16.2.0"
+		"globals": "^16.2.0",
+		"prettier": "^3.5.3"
 	}
 }

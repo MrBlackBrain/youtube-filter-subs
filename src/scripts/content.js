@@ -1,14 +1,14 @@
 // Load all modules dynamically
 Promise.all([
-	import(chrome.runtime.getURL("src/scripts/lib/state.js")),
-	import(chrome.runtime.getURL("src/scripts/lib/config.js")),
-	import(chrome.runtime.getURL("src/scripts/lib/utils.js")),
-	import(chrome.runtime.getURL("src/scripts/lib/query-handling.js")),
-	import(chrome.runtime.getURL("src/scripts/lib/visibility-management.js")),
-	import(chrome.runtime.getURL("src/scripts/lib/ui-creation.js")),
-	import(chrome.runtime.getURL("src/scripts/lib/mode-management.js")),
-	import(chrome.runtime.getURL("src/scripts/lib/status-classification.js")),
-	import(chrome.runtime.getURL("src/scripts/common.js")),
+	import(chrome.runtime.getURL('src/scripts/lib/state.js')),
+	import(chrome.runtime.getURL('src/scripts/lib/config.js')),
+	import(chrome.runtime.getURL('src/scripts/lib/utils.js')),
+	import(chrome.runtime.getURL('src/scripts/lib/query-handling.js')),
+	import(chrome.runtime.getURL('src/scripts/lib/visibility-management.js')),
+	import(chrome.runtime.getURL('src/scripts/lib/ui-creation.js')),
+	import(chrome.runtime.getURL('src/scripts/lib/mode-management.js')),
+	import(chrome.runtime.getURL('src/scripts/lib/status-classification.js')),
+	import(chrome.runtime.getURL('src/scripts/common.js')),
 ])
 	.then(
 		([
@@ -22,8 +22,8 @@ Promise.all([
 			statusModule,
 			common,
 		]) => {
-			const lang = document.documentElement.getAttribute("lang");
-			import(chrome.runtime.getURL("src/lang/" + (lang ? lang : "en") + ".js"))
+			const lang = document.documentElement.getAttribute('lang');
+			import(chrome.runtime.getURL('src/lang/' + (lang ? lang : 'en') + '.js'))
 				.then((lang) => {
 					// Extract all the imports
 					const { filterState } = stateModule;
@@ -62,7 +62,7 @@ Promise.all([
 					const { changeMode, changeModeProgress } = modeModule;
 					const { includesStatus } = statusModule;
 
-					main(document.querySelector("ytd-app") ?? document.body, common, lang, {
+					main(document.querySelector('ytd-app') ?? document.body, common, lang, {
 						filterState,
 						buttonLabels,
 						selectors,
@@ -104,12 +104,12 @@ Promise.all([
 					});
 				})
 				.catch((error) => {
-					console.error("Failed to load language module:", error);
+					console.error('Failed to load language module:', error);
 				});
 		}
 	)
 	.catch((error) => {
-		console.error("Failed to load extension modules:", error);
+		console.error('Failed to load extension modules:', error);
 	});
 
 function main(app, common, lang, modules) {
@@ -157,18 +157,18 @@ function main(app, common, lang, modules) {
 		const queueCount = filterState.settings.queue_count || common.default_queue_count;
 
 		if (!common.isSubscriptions(location.href)) {
-			console.log("Not on subscriptions page, trying anyway...");
+			console.log('Not on subscriptions page, trying anyway...');
 		}
 
 		// Find the contents container
-		const contentsContainer = browse.querySelector("#contents");
+		const contentsContainer = browse.querySelector('#contents');
 		if (!contentsContainer) {
-			console.log("Could not find #contents container");
+			console.log('Could not find #contents container');
 			return;
 		}
 
 		// Get all video elements from the contents container
-		const allVideoElements = contentsContainer.querySelectorAll("ytd-rich-item-renderer");
+		const allVideoElements = contentsContainer.querySelectorAll('ytd-rich-item-renderer');
 
 		// Filter to only visible videos (display is not "none")
 		const visibleVideos = [];
@@ -178,7 +178,7 @@ function main(app, common, lang, modules) {
 		for (const videoElement of allVideoElements) {
 			// Check if the video is visible by checking computed display style
 			const computedStyle = window.getComputedStyle(videoElement);
-			const isVisible = computedStyle.display !== "none";
+			const isVisible = computedStyle.display !== 'none';
 
 			if (!isVisible) {
 				console.log(`Skipping hidden video element`);
@@ -192,8 +192,8 @@ function main(app, common, lang, modules) {
 			}
 
 			// Find the video title using the #video-title selector
-			const titleElement = videoElement.querySelector("#video-title");
-			let videoTitle = "";
+			const titleElement = videoElement.querySelector('#video-title');
+			let videoTitle = '';
 			let videoLink = null;
 
 			if (titleElement) {
@@ -201,9 +201,9 @@ function main(app, common, lang, modules) {
 				videoTitle =
 					titleElement.textContent?.trim() ||
 					titleElement.title?.trim() ||
-					titleElement.getAttribute("aria-label")?.trim() ||
+					titleElement.getAttribute('aria-label')?.trim() ||
 					titleElement.innerText?.trim() ||
-					"";
+					'';
 
 				if (videoTitle) {
 					// Find the video link
@@ -218,7 +218,7 @@ function main(app, common, lang, modules) {
 			}
 
 			// Clean up the title (remove extra whitespace, normalize)
-			videoTitle = videoTitle.replace(/\s+/g, " ").trim();
+			videoTitle = videoTitle.replace(/\s+/g, ' ').trim();
 
 			if (videoTitle && videoLink) {
 				// Only add if we have a valid title and haven't seen it before
@@ -237,7 +237,7 @@ function main(app, common, lang, modules) {
 		const topNVideos = visibleVideos.slice(0, queueCount);
 
 		if (topNVideos.length === 0) {
-			console.log("No videos found to queue");
+			console.log('No videos found to queue');
 			return;
 		}
 
@@ -271,15 +271,15 @@ function main(app, common, lang, modules) {
 						// Wait for menu to appear, then find "Add to queue" option
 						setTimeout(() => {
 							// Look for the "Add to queue" menu item by finding the text first
-							const formattedStrings = document.querySelectorAll("yt-formatted-string");
+							const formattedStrings = document.querySelectorAll('yt-formatted-string');
 							let addToQueueItem = null;
 
 							for (const formattedString of formattedStrings) {
-								if (formattedString.textContent && formattedString.textContent.trim() === "Add to queue") {
+								if (formattedString.textContent && formattedString.textContent.trim() === 'Add to queue') {
 									// Found the text, now find the clickable parent
 									addToQueueItem =
-										formattedString.closest("ytd-menu-service-item-renderer") ||
-										formattedString.closest("tp-yt-paper-item");
+										formattedString.closest('ytd-menu-service-item-renderer') ||
+										formattedString.closest('tp-yt-paper-item');
 									break;
 								}
 							}
@@ -291,7 +291,7 @@ function main(app, common, lang, modules) {
 							} else {
 								// Only close menu if we couldn't find the add to queue option
 								setTimeout(() => {
-									document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", keyCode: 27 }));
+									document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', keyCode: 27 }));
 								}, 50);
 							}
 						}, 300);
@@ -305,9 +305,14 @@ function main(app, common, lang, modules) {
 		});
 
 		// Show feedback to user
-		setTimeout(() => {
-			console.log(`Queue operation completed. Successfully queued ${queuedCount} out of ${topNVideos.length} video(s)`);
-		}, topNVideos.length * 400 + 500);
+		setTimeout(
+			() => {
+				console.log(
+					`Queue operation completed. Successfully queued ${queuedCount} out of ${topNVideos.length} video(s)`
+				);
+			},
+			topNVideos.length * 400 + 500
+		);
 	}
 
 	async function updateButtonVisibility(browse) {
@@ -348,7 +353,7 @@ function main(app, common, lang, modules) {
 	}
 
 	function updateButtonVisibilityForPageType(browse, data, common) {
-		for (const menu of browse.querySelectorAll("form.filter-menu")) {
+		for (const menu of browse.querySelectorAll('form.filter-menu')) {
 			updateMenuButtons(menu, data, common);
 		}
 
@@ -357,17 +362,17 @@ function main(app, common, lang, modules) {
 	}
 
 	function updateMenuButtons(menu, data, common) {
-		const select = menu.querySelector("select.filter-menu");
+		const select = menu.querySelector('select.filter-menu');
 
 		// Re-append elements in correct order (only if they exist)
-		const allSubsButton = menu.querySelector("span.filter-button-subscriptions.all");
+		const allSubsButton = menu.querySelector('span.filter-button-subscriptions.all');
 		if (allSubsButton) menu.appendChild(allSubsButton);
 
-		const allChannelsButton = menu.querySelector("span.filter-button-channels.all");
+		const allChannelsButton = menu.querySelector('span.filter-button-channels.all');
 		if (allChannelsButton) menu.appendChild(allChannelsButton);
 
 		if (select) {
-			const allSubsOption = select.querySelector("option.filter-button-subscriptions.all");
+			const allSubsOption = select.querySelector('option.filter-button-subscriptions.all');
 			if (allSubsOption) select.appendChild(allSubsOption);
 		}
 
@@ -375,12 +380,12 @@ function main(app, common, lang, modules) {
 		for (const mode of common.order(data.order)) {
 			if (
 				[
-					"keyword",
-					"multiselection",
-					"responsive",
-					"keyword_add_playlist",
-					"keyword_sidebar_channels",
-					"keyword_notification",
+					'keyword',
+					'multiselection',
+					'responsive',
+					'keyword_add_playlist',
+					'keyword_sidebar_channels',
+					'keyword_notification',
 				].includes(mode)
 			) {
 				continue;
@@ -391,43 +396,43 @@ function main(app, common, lang, modules) {
 
 		if (select) menu.appendChild(select);
 
-		for (const query of menu.querySelectorAll("span.filter-query")) {
+		for (const query of menu.querySelectorAll('span.filter-query')) {
 			if (query) menu.appendChild(query);
 		}
 	}
 
 	function updateButtonForMode(menu, mode, data, common, select) {
-		const button_text = data["button_label_" + mode] || common.button_label[mode];
+		const button_text = data['button_label_' + mode] || common.button_label[mode];
 
-		if (mode.startsWith("progress_")) {
-			const span = menu.querySelector("span.filter-button." + mode);
+		if (mode.startsWith('progress_')) {
+			const span = menu.querySelector('span.filter-button.' + mode);
 			if (span) {
 				span.innerHTML = button_text;
 				menu.appendChild(span);
 			}
-		} else if (mode.startsWith("channels_")) {
-			const span = menu.querySelector("span.filter-button." + mode);
+		} else if (mode.startsWith('channels_')) {
+			const span = menu.querySelector('span.filter-button.' + mode);
 			if (span) {
 				span.innerHTML = button_text;
 				menu.appendChild(span);
 			}
-		} else if (mode === "queue_top_n") {
-			const span = menu.querySelector("span.filter-button." + mode);
+		} else if (mode === 'queue_top_n') {
+			const span = menu.querySelector('span.filter-button.' + mode);
 			if (span) {
 				const queueCount = data.queue_count || common.default_queue_count;
-				span.innerHTML = button_text.replace("N", queueCount);
+				span.innerHTML = button_text.replace('N', queueCount);
 				span.title = `Add the top ${queueCount} videos to your queue`;
 				menu.appendChild(span);
 			}
 		} else {
-			const span = menu.querySelector("span.filter-button." + mode);
+			const span = menu.querySelector('span.filter-button.' + mode);
 			if (span) {
 				span.innerHTML = button_text;
 				menu.appendChild(span);
 			}
 
 			if (select) {
-				const option = select.querySelector("option.filter-button." + mode);
+				const option = select.querySelector('option.filter-button.' + mode);
 				if (option) {
 					option.innerHTML = button_text;
 					select.appendChild(option);
@@ -494,129 +499,129 @@ function main(app, common, lang, modules) {
 
 		displayQuery(
 			browse,
-			"span.filter-button-subscriptions.all",
+			'span.filter-button-subscriptions.all',
 			displayAny([live, streamed, video, short, scheduled, notification_on, notification_off])
 		);
-		displayQuery(browse, "span.filter-button-subscriptions.live", display(live));
-		displayQuery(browse, "span.filter-button-subscriptions.streamed", display(streamed));
-		displayQuery(browse, "span.filter-button-subscriptions.video", display(video));
-		displayQuery(browse, "span.filter-button-subscriptions.short", display(short));
-		displayQuery(browse, "span.filter-button-subscriptions.scheduled", display(scheduled));
-		displayQuery(browse, "span.filter-button-subscriptions.notification_on", display(notification_on));
-		displayQuery(browse, "span.filter-button-subscriptions.notification_off", display(notification_off));
+		displayQuery(browse, 'span.filter-button-subscriptions.live', display(live));
+		displayQuery(browse, 'span.filter-button-subscriptions.streamed', display(streamed));
+		displayQuery(browse, 'span.filter-button-subscriptions.video', display(video));
+		displayQuery(browse, 'span.filter-button-subscriptions.short', display(short));
+		displayQuery(browse, 'span.filter-button-subscriptions.scheduled', display(scheduled));
+		displayQuery(browse, 'span.filter-button-subscriptions.notification_on', display(notification_on));
+		displayQuery(browse, 'span.filter-button-subscriptions.notification_off', display(notification_off));
 
 		displayQuery(
 			browse,
-			"select.filter-menu",
+			'select.filter-menu',
 			displayAny([live, streamed, video, short, scheduled, notification_on, notification_off])
 		);
 		displayQuery(
 			browse,
-			"option.filter-button-subscriptions.all",
+			'option.filter-button-subscriptions.all',
 			displayAny([live, streamed, video, short, scheduled, notification_on, notification_off])
 		);
-		displayQuery(browse, "option.filter-button-subscriptions.live", display(live));
-		displayQuery(browse, "option.filter-button-subscriptions.streamed", display(streamed));
-		displayQuery(browse, "option.filter-button-subscriptions.video", display(video));
-		displayQuery(browse, "option.filter-button-subscriptions.short", display(short));
-		displayQuery(browse, "option.filter-button-subscriptions.scheduled", display(scheduled));
-		displayQuery(browse, "option.filter-button-subscriptions.notification_on", display(notification_on));
-		displayQuery(browse, "option.filter-button-subscriptions.notification_off", display(notification_off));
+		displayQuery(browse, 'option.filter-button-subscriptions.live', display(live));
+		displayQuery(browse, 'option.filter-button-subscriptions.streamed', display(streamed));
+		displayQuery(browse, 'option.filter-button-subscriptions.video', display(video));
+		displayQuery(browse, 'option.filter-button-subscriptions.short', display(short));
+		displayQuery(browse, 'option.filter-button-subscriptions.scheduled', display(scheduled));
+		displayQuery(browse, 'option.filter-button-subscriptions.notification_on', display(notification_on));
+		displayQuery(browse, 'option.filter-button-subscriptions.notification_off', display(notification_off));
 
-		displayQuery(browse, "span.filter-button.progress_unwatched", display(progress_unwatched));
-		displayQuery(browse, "span.filter-button.progress_watched", display(progress_watched));
+		displayQuery(browse, 'span.filter-button.progress_unwatched', display(progress_unwatched));
+		displayQuery(browse, 'span.filter-button.progress_watched', display(progress_watched));
 
-		displayQuery(browse, "span.filter-button.queue_top_n", display(queue_top_n));
+		displayQuery(browse, 'span.filter-button.queue_top_n', display(queue_top_n));
 
-		displayQuery(browse, "span.filter-button-channels.all", "none");
-		displayQuery(browse, "span.filter-button-channels.channels_all", "none");
-		displayQuery(browse, "span.filter-button-channels.channels_personalized", "none");
-		displayQuery(browse, "span.filter-button-channels.channels_none", "none");
+		displayQuery(browse, 'span.filter-button-channels.all', 'none');
+		displayQuery(browse, 'span.filter-button-channels.channels_all', 'none');
+		displayQuery(browse, 'span.filter-button-channels.channels_personalized', 'none');
+		displayQuery(browse, 'span.filter-button-channels.channels_none', 'none');
 
-		displayQuery(browse, "span.filter-query", display(filterState.settings.keyword));
+		displayQuery(browse, 'span.filter-query', display(filterState.settings.keyword));
 	}
 
 	function setLibraryVisibility(browse, settings) {
 		const { live, streamed, video, short, scheduled } = settings;
-		displayQuery(browse, "span.filter-button-subscriptions.all", displayAny([live, streamed, video, short, scheduled]));
-		displayQuery(browse, "span.filter-button-subscriptions.live", display(live));
-		displayQuery(browse, "span.filter-button-subscriptions.streamed", display(streamed));
-		displayQuery(browse, "span.filter-button-subscriptions.video", display(video));
-		displayQuery(browse, "span.filter-button-subscriptions.short", display(short));
-		displayQuery(browse, "span.filter-button-subscriptions.scheduled", display(scheduled));
-		displayQuery(browse, "span.filter-query", display(filterState.settings.keyword));
+		displayQuery(browse, 'span.filter-button-subscriptions.all', displayAny([live, streamed, video, short, scheduled]));
+		displayQuery(browse, 'span.filter-button-subscriptions.live', display(live));
+		displayQuery(browse, 'span.filter-button-subscriptions.streamed', display(streamed));
+		displayQuery(browse, 'span.filter-button-subscriptions.video', display(video));
+		displayQuery(browse, 'span.filter-button-subscriptions.short', display(short));
+		displayQuery(browse, 'span.filter-button-subscriptions.scheduled', display(scheduled));
+		displayQuery(browse, 'span.filter-query', display(filterState.settings.keyword));
 	}
 
 	function setPlaylistVisibility(browse) {
-		displayQuery(browse, "span.filter-button-subscriptions.all", "none");
-		displayQuery(browse, "span.filter-query", display(filterState.settings.keyword));
+		displayQuery(browse, 'span.filter-button-subscriptions.all', 'none');
+		displayQuery(browse, 'span.filter-query', display(filterState.settings.keyword));
 	}
 
 	function setHistoryVisibility(browse, settings) {
 		const { live, streamed, video, short, scheduled } = settings;
-		displayQuery(browse, "span.filter-button-subscriptions.all", displayAny([live, streamed, video, short, scheduled]));
-		displayQuery(browse, "span.filter-button-subscriptions.live", display(live));
-		displayQuery(browse, "span.filter-button-subscriptions.streamed", display(streamed));
-		displayQuery(browse, "span.filter-button-subscriptions.video", display(video));
-		displayQuery(browse, "span.filter-button-subscriptions.short", display(short));
-		displayQuery(browse, "span.filter-button-subscriptions.scheduled", display(scheduled));
-		displayQuery(browse, "span.filter-query", display(filterState.settings.keyword));
+		displayQuery(browse, 'span.filter-button-subscriptions.all', displayAny([live, streamed, video, short, scheduled]));
+		displayQuery(browse, 'span.filter-button-subscriptions.live', display(live));
+		displayQuery(browse, 'span.filter-button-subscriptions.streamed', display(streamed));
+		displayQuery(browse, 'span.filter-button-subscriptions.video', display(video));
+		displayQuery(browse, 'span.filter-button-subscriptions.short', display(short));
+		displayQuery(browse, 'span.filter-button-subscriptions.scheduled', display(scheduled));
+		displayQuery(browse, 'span.filter-query', display(filterState.settings.keyword));
 	}
 
 	function setHashTagVisibility(browse, settings) {
 		const { live, streamed, video, short, scheduled } = settings;
-		displayQuery(browse, "span.filter-button-subscriptions.all", displayAny([live, streamed, video, short, scheduled]));
-		displayQuery(browse, "span.filter-button-subscriptions.live", display(live));
-		displayQuery(browse, "span.filter-button-subscriptions.streamed", display(streamed));
-		displayQuery(browse, "span.filter-button-subscriptions.video", display(video));
-		displayQuery(browse, "span.filter-button-subscriptions.short", display(short));
-		displayQuery(browse, "span.filter-button-subscriptions.scheduled", display(scheduled));
-		displayQuery(browse, "span.filter-query", display(filterState.settings.keyword));
+		displayQuery(browse, 'span.filter-button-subscriptions.all', displayAny([live, streamed, video, short, scheduled]));
+		displayQuery(browse, 'span.filter-button-subscriptions.live', display(live));
+		displayQuery(browse, 'span.filter-button-subscriptions.streamed', display(streamed));
+		displayQuery(browse, 'span.filter-button-subscriptions.video', display(video));
+		displayQuery(browse, 'span.filter-button-subscriptions.short', display(short));
+		displayQuery(browse, 'span.filter-button-subscriptions.scheduled', display(scheduled));
+		displayQuery(browse, 'span.filter-query', display(filterState.settings.keyword));
 	}
 
 	function setPlaylistsVisibility(browse) {
-		displayQuery(browse, "span.filter-button-subscriptions.all", "none");
-		displayQuery(browse, "span.filter-query", display(filterState.settings.keyword));
+		displayQuery(browse, 'span.filter-button-subscriptions.all', 'none');
+		displayQuery(browse, 'span.filter-query', display(filterState.settings.keyword));
 	}
 
 	function setChannelVisibility(browse, settings) {
 		const { live, streamed, video, short, scheduled } = settings;
-		displayQuery(browse, "span.filter-button-subscriptions.all", displayAny([live, streamed, video, short, scheduled]));
-		displayQuery(browse, "span.filter-button-subscriptions.live", display(live));
-		displayQuery(browse, "span.filter-button-subscriptions.streamed", display(streamed));
-		displayQuery(browse, "span.filter-button-subscriptions.video", display(video));
-		displayQuery(browse, "span.filter-button-subscriptions.short", display(short));
-		displayQuery(browse, "span.filter-button-subscriptions.scheduled", display(scheduled));
-		displayQuery(browse, "span.filter-query", display(filterState.settings.keyword));
+		displayQuery(browse, 'span.filter-button-subscriptions.all', displayAny([live, streamed, video, short, scheduled]));
+		displayQuery(browse, 'span.filter-button-subscriptions.live', display(live));
+		displayQuery(browse, 'span.filter-button-subscriptions.streamed', display(streamed));
+		displayQuery(browse, 'span.filter-button-subscriptions.video', display(video));
+		displayQuery(browse, 'span.filter-button-subscriptions.short', display(short));
+		displayQuery(browse, 'span.filter-button-subscriptions.scheduled', display(scheduled));
+		displayQuery(browse, 'span.filter-query', display(filterState.settings.keyword));
 	}
 
 	function setShortsVisibility(browse) {
-		displayQuery(browse, "span.filter-button-subscriptions.all", "none");
-		displayQuery(browse, "span.filter-query", display(filterState.settings.keyword));
+		displayQuery(browse, 'span.filter-button-subscriptions.all', 'none');
+		displayQuery(browse, 'span.filter-query', display(filterState.settings.keyword));
 	}
 
 	function setChannelsVisibility(browse, settings) {
 		const { channels_all, channels_personalized, channels_none } = settings;
 		displayQuery(
 			browse,
-			"span.filter-button-channels.all",
+			'span.filter-button-channels.all',
 			displayAny([channels_all, channels_personalized, channels_none])
 		);
-		displayQuery(browse, "span.filter-button-channels.channels_all", display(channels_all));
-		displayQuery(browse, "span.filter-button-channels.channels_personalized", display(channels_personalized));
-		displayQuery(browse, "span.filter-button-channels.channels_none", display(channels_none));
-		displayQuery(browse, "span.filter-query", display(filterState.settings.keyword));
+		displayQuery(browse, 'span.filter-button-channels.channels_all', display(channels_all));
+		displayQuery(browse, 'span.filter-button-channels.channels_personalized', display(channels_personalized));
+		displayQuery(browse, 'span.filter-button-channels.channels_none', display(channels_none));
+		displayQuery(browse, 'span.filter-query', display(filterState.settings.keyword));
 	}
 
 	function setTopVisibility(browse, settings) {
 		const { live, streamed, video, short, scheduled } = settings;
-		displayQuery(browse, "span.filter-button-subscriptions.all", displayAny([live, streamed, video, short, scheduled]));
-		displayQuery(browse, "span.filter-button-subscriptions.live", display(live));
-		displayQuery(browse, "span.filter-button-subscriptions.streamed", display(streamed));
-		displayQuery(browse, "span.filter-button-subscriptions.video", display(video));
-		displayQuery(browse, "span.filter-button-subscriptions.short", display(short));
-		displayQuery(browse, "span.filter-button-subscriptions.scheduled", display(scheduled));
-		displayQuery(browse, "span.filter-query", display(filterState.settings.keyword));
+		displayQuery(browse, 'span.filter-button-subscriptions.all', displayAny([live, streamed, video, short, scheduled]));
+		displayQuery(browse, 'span.filter-button-subscriptions.live', display(live));
+		displayQuery(browse, 'span.filter-button-subscriptions.streamed', display(streamed));
+		displayQuery(browse, 'span.filter-button-subscriptions.video', display(video));
+		displayQuery(browse, 'span.filter-button-subscriptions.short', display(short));
+		displayQuery(browse, 'span.filter-button-subscriptions.scheduled', display(scheduled));
+		displayQuery(browse, 'span.filter-query', display(filterState.settings.keyword));
 	}
 
 	function updateQueueButtonVisibility() {
@@ -627,15 +632,15 @@ function main(app, common, lang, modules) {
 	}
 
 	function updatePopupMenuVisibility(app) {
-		for (const menu of app.querySelectorAll("form.filter-popup.filter-add-playlist")) {
+		for (const menu of app.querySelectorAll('form.filter-popup.filter-add-playlist')) {
 			menu.style.display = display(filterState.settings.keyword_add_playlist);
 		}
 
-		for (const menu of app.querySelectorAll("form.filter-popup.filter-sidebar-channels")) {
+		for (const menu of app.querySelectorAll('form.filter-popup.filter-sidebar-channels')) {
 			menu.style.display = display(filterState.settings.keyword_sidebar_channels);
 		}
 
-		for (const menu of app.querySelectorAll("form.filter-popup.filter-notification")) {
+		for (const menu of app.querySelectorAll('form.filter-popup.filter-notification')) {
 			menu.style.display = display(filterState.settings.keyword_notification);
 		}
 	}
@@ -643,58 +648,58 @@ function main(app, common, lang, modules) {
 	async function onNodeLoaded(node, is_menu_target) {
 		// Handle different node types and update visibility
 		switch (node.nodeName) {
-			case "YTD-BROWSE":
-			case "YTD-SECTION-LIST-RENDERER":
-			case "YTD-TABBED-PAGE-HEADER":
-			case "YTD-FEED-FILTER-CHIP-BAR-RENDERER":
+			case 'YTD-BROWSE':
+			case 'YTD-SECTION-LIST-RENDERER':
+			case 'YTD-TABBED-PAGE-HEADER':
+			case 'YTD-FEED-FILTER-CHIP-BAR-RENDERER':
 				if (is_menu_target) {
 					await insertMenu(node);
 				}
 				break;
 
-			case "YTD-POPUP-CONTAINER":
-			case "YT-MULTI-PAGE-MENU-SECTION-RENDERER":
-			case "YTD-GUIDE-SECTION-RENDERER":
+			case 'YTD-POPUP-CONTAINER':
+			case 'YT-MULTI-PAGE-MENU-SECTION-RENDERER':
+			case 'YTD-GUIDE-SECTION-RENDERER':
 				insertPopupMenu(node);
 				break;
 
-			case "YTD-GRID-VIDEO-RENDERER":
-			case "YTD-VIDEO-RENDERER":
-			case "YTD-CHANNEL-RENDERER":
-			case "YTD-BACKSTAGE-POST-THREAD-RENDERER":
-			case "YTD-GRID-PLAYLIST-RENDERER":
-			case "YTM-SHORTS-LOCKUP-VIEW-MODEL-V2":
-			case "YTD-RICH-ITEM-RENDERER":
-			case "YT-LOCKUP-VIEW-MODEL":
+			case 'YTD-GRID-VIDEO-RENDERER':
+			case 'YTD-VIDEO-RENDERER':
+			case 'YTD-CHANNEL-RENDERER':
+			case 'YTD-BACKSTAGE-POST-THREAD-RENDERER':
+			case 'YTD-GRID-PLAYLIST-RENDERER':
+			case 'YTM-SHORTS-LOCKUP-VIEW-MODEL-V2':
+			case 'YTD-RICH-ITEM-RENDERER':
+			case 'YT-LOCKUP-VIEW-MODEL':
 				if (is_menu_target) {
 					updateTargetVisibility(node, filterState, lang, includesStatus, matchQuery);
 				}
 				break;
 
-			case "YTD-ITEM-SECTION-RENDERER":
+			case 'YTD-ITEM-SECTION-RENDERER':
 				if (is_menu_target) {
 					updateVisibility(node, filterState, lang, selectors, includesStatus, matchQuery);
 				}
 				break;
 
-			case "DIV":
-				if (is_menu_target && node.id === "contents") {
+			case 'DIV':
+				if (is_menu_target && node.id === 'contents') {
 					updateVisibility(node, filterState, lang, selectors, includesStatus, matchQuery);
 				}
-				if (["playlists", "items", "expandable-items"].includes(node.id)) {
+				if (['playlists', 'items', 'expandable-items'].includes(node.id)) {
 					updatePopupVisibility([node], filterState, selectors, matchPopupQuery, getPopupKey);
 				}
 				break;
 
-			case "YTD-CONTINUATION-ITEM-RENDERER":
+			case 'YTD-CONTINUATION-ITEM-RENDERER':
 				handleContinuationItem(node, common, filterState, load_button_container);
 				break;
 		}
 	}
 
 	async function insertMenu(node) {
-		const browse = searchParentNode(node, "YTD-BROWSE");
-		if (browse && !browse.querySelector("form.filter-menu:not(.filter-forCalc)")) {
+		const browse = searchParentNode(node, 'YTD-BROWSE');
+		if (browse && !browse.querySelector('form.filter-menu:not(.filter-forCalc)')) {
 			const referenceNode = getReferenceNode(browse);
 			if (referenceNode) {
 				const menu = createMenu(browse);
@@ -705,22 +710,22 @@ function main(app, common, lang, modules) {
 
 				const spacerReferenceNode = getSpacerReferenceNode(browse);
 				if (spacerReferenceNode) {
-					spacerReferenceNode.parentNode.insertBefore(createSpacer("browse"), spacerReferenceNode);
+					spacerReferenceNode.parentNode.insertBefore(createSpacer('browse'), spacerReferenceNode);
 				}
 
 				await updateButtonVisibility(browse);
-				displayQuery(browse, "form.filter-menu, div.filter-menu", "");
+				displayQuery(browse, 'form.filter-menu, div.filter-menu', '');
 			}
 		}
 	}
 
 	function getReferenceNode(browse) {
 		if (forTwoColumnBrowseResultsRenderer(common)) {
-			return browse.querySelector("ytd-two-column-browse-results-renderer").parentNode;
+			return browse.querySelector('ytd-two-column-browse-results-renderer').parentNode;
 		} else if (forPageHeaderRenderer(common)) {
-			return browse.querySelector("yt-page-header-renderer").parentNode;
+			return browse.querySelector('yt-page-header-renderer').parentNode;
 		} else if (common.isTop(location.href)) {
-			return browse.querySelector("div#scroll-container");
+			return browse.querySelector('div#scroll-container');
 		} else {
 			return browse;
 		}
@@ -730,27 +735,27 @@ function main(app, common, lang, modules) {
 		if (needSpacer(common)) {
 			return browse.firstChild;
 		} else if (common.isTop(location.href)) {
-			return browse.querySelector("div#contents");
+			return browse.querySelector('div#contents');
 		} else {
 			return undefined;
 		}
 	}
 
 	function createMenu(browse) {
-		const menu = document.createElement("form");
-		menu.style.display = "none";
+		const menu = document.createElement('form');
+		menu.style.display = 'none';
 
 		if (isPositionFixedTarget(common)) {
-			menu.classList.add("filter-menu", "position-fixed");
+			menu.classList.add('filter-menu', 'position-fixed');
 		} else {
-			menu.classList.add("filter-menu");
+			menu.classList.add('filter-menu');
 		}
 
 		// Create menu elements
 		menu.appendChild(
 			createButton(
 				common.button_label.all,
-				"all",
+				'all',
 				false,
 				browse,
 				common,
@@ -763,7 +768,7 @@ function main(app, common, lang, modules) {
 		menu.appendChild(
 			createButton(
 				common.button_label.live,
-				"live",
+				'live',
 				false,
 				browse,
 				common,
@@ -776,7 +781,7 @@ function main(app, common, lang, modules) {
 		menu.appendChild(
 			createButton(
 				common.button_label.streamed,
-				"streamed",
+				'streamed',
 				false,
 				browse,
 				common,
@@ -789,7 +794,7 @@ function main(app, common, lang, modules) {
 		menu.appendChild(
 			createButton(
 				common.button_label.video,
-				"video",
+				'video',
 				false,
 				browse,
 				common,
@@ -802,7 +807,7 @@ function main(app, common, lang, modules) {
 		menu.appendChild(
 			createButton(
 				common.button_label.short,
-				"short",
+				'short',
 				false,
 				browse,
 				common,
@@ -815,7 +820,7 @@ function main(app, common, lang, modules) {
 		menu.appendChild(
 			createButton(
 				common.button_label.scheduled,
-				"scheduled",
+				'scheduled',
 				false,
 				browse,
 				common,
@@ -829,7 +834,7 @@ function main(app, common, lang, modules) {
 		menu.appendChild(
 			createButton(
 				common.button_label.progress_unwatched,
-				"progress_unwatched",
+				'progress_unwatched',
 				false,
 				browse,
 				common,
@@ -845,7 +850,7 @@ function main(app, common, lang, modules) {
 		menu.appendChild(
 			createButton(
 				common.button_label.progress_watched,
-				"progress_watched",
+				'progress_watched',
 				false,
 				browse,
 				common,
@@ -866,33 +871,33 @@ function main(app, common, lang, modules) {
 		);
 
 		select.appendChild(createOption(common.button_label.placeholder));
-		select.appendChild(createOption(common.button_label.all, "all"));
-		select.appendChild(createOption(common.button_label.live, "live"));
-		select.appendChild(createOption(common.button_label.streamed, "streamed"));
-		select.appendChild(createOption(common.button_label.video, "video"));
-		select.appendChild(createOption(common.button_label.short, "short"));
-		select.appendChild(createOption(common.button_label.scheduled, "scheduled"));
+		select.appendChild(createOption(common.button_label.all, 'all'));
+		select.appendChild(createOption(common.button_label.live, 'live'));
+		select.appendChild(createOption(common.button_label.streamed, 'streamed'));
+		select.appendChild(createOption(common.button_label.video, 'video'));
+		select.appendChild(createOption(common.button_label.short, 'short'));
+		select.appendChild(createOption(common.button_label.scheduled, 'scheduled'));
 
 		menu.appendChild(select);
 
 		// Queue Top N Button - show based on settings
-		console.log("Creating menu - checking if on subscriptions page:", {
+		console.log('Creating menu - checking if on subscriptions page:', {
 			currentUrl: location.href,
 			isSubscriptions: common.isSubscriptions(location.href),
 		});
 
 		if (common.isSubscriptions(location.href)) {
-			console.log("Creating Queue Top N button");
+			console.log('Creating Queue Top N button');
 			const queueCount = filterState.settings.queue_count || common.default_queue_count;
 			const buttonText = (filterState.settings.button_label_queue_top_n || common.button_label.queue_top_n).replace(
-				"N",
+				'N',
 				queueCount
 			);
 			const queueTopNButton = createQueueTopNButton(browse, common, handleQueueTopN, queueCount, buttonText);
 			menu.appendChild(queueTopNButton);
-			console.log("Queue Top N button created and added to menu");
+			console.log('Queue Top N button created and added to menu');
 		} else {
-			console.log("Not on subscriptions page, skipping Queue Top N button creation");
+			console.log('Not on subscriptions page, skipping Queue Top N button creation');
 		}
 
 		const input = createQueryInput(menu, browse, filterState);
@@ -915,11 +920,11 @@ function main(app, common, lang, modules) {
 			)
 		);
 
-		menu.addEventListener("submit", (e) => {
+		menu.addEventListener('submit', (e) => {
 			e.preventDefault();
 			updateQueryRegex(browse, input.value, filterState);
 			updateVisibility(browse, filterState, lang, selectors, includesStatus, matchQuery);
-			window.scroll({ top: 0, behavior: "instant" });
+			window.scroll({ top: 0, behavior: 'instant' });
 		});
 
 		return menu;
@@ -927,14 +932,14 @@ function main(app, common, lang, modules) {
 
 	function insertPopupMenu(node) {
 		// Handle popup menu insertion for different container types
-		if (node.nodeName === "YTD-POPUP-CONTAINER") {
-			const containers = [node.querySelector("div#playlists, div#items, div#expandable-items")].filter(Boolean);
+		if (node.nodeName === 'YTD-POPUP-CONTAINER') {
+			const containers = [node.querySelector('div#playlists, div#items, div#expandable-items')].filter(Boolean);
 			if (containers.length > 0) {
 				updatePopupVisibility(containers, filterState, selectors, matchPopupQuery, getPopupKey);
 			}
 		} else if (
-			node.nodeName === "YT-MULTI-PAGE-MENU-SECTION-RENDERER" ||
-			node.nodeName === "YTD-GUIDE-SECTION-RENDERER"
+			node.nodeName === 'YT-MULTI-PAGE-MENU-SECTION-RENDERER' ||
+			node.nodeName === 'YTD-GUIDE-SECTION-RENDERER'
 		) {
 			const containers = [node].filter(Boolean);
 			if (containers.length > 0) {
@@ -947,43 +952,43 @@ function main(app, common, lang, modules) {
 		if (isMenuTarget(common)) {
 			if (filterState.settings.responsive) {
 				for (const form of app.querySelectorAll('ytd-browse[role="main"] form.filter-menu:not(.filter-forCalc)')) {
-					for (const calc of form.parentNode.querySelectorAll("form.filter-forCalc")) {
+					for (const calc of form.parentNode.querySelectorAll('form.filter-forCalc')) {
 						form.parentNode.insertBefore(calc, form);
 						if (calc.scrollWidth <= form.parentNode.clientWidth) {
-							document.documentElement.style.setProperty("--filter-button-display", "inline-flex");
-							document.documentElement.style.setProperty("--filter-menu-display", "none");
+							document.documentElement.style.setProperty('--filter-button-display', 'inline-flex');
+							document.documentElement.style.setProperty('--filter-menu-display', 'none');
 						} else {
-							document.documentElement.style.setProperty("--filter-button-display", "none");
-							document.documentElement.style.setProperty("--filter-menu-display", "block");
+							document.documentElement.style.setProperty('--filter-button-display', 'none');
+							document.documentElement.style.setProperty('--filter-menu-display', 'block');
 						}
 					}
 				}
 			} else {
-				document.documentElement.style.setProperty("--filter-button-display", "inline-flex");
-				document.documentElement.style.setProperty("--filter-menu-display", "none");
+				document.documentElement.style.setProperty('--filter-button-display', 'inline-flex');
+				document.documentElement.style.setProperty('--filter-menu-display', 'none');
 			}
 		}
 	}
 
 	async function onViewChanged() {
-		for (const browse of app.querySelectorAll("ytd-browse")) {
+		for (const browse of app.querySelectorAll('ytd-browse')) {
 			await updateButtonVisibility(browse);
-			displayQuery(browse, "form.filter-menu, div.filter-menu", display(isMenuTarget(common)));
+			displayQuery(browse, 'form.filter-menu, div.filter-menu', display(isMenuTarget(common)));
 			updateVisibility(browse, filterState, lang, selectors, includesStatus, matchQuery);
 		}
 	}
 
 	// Event listeners
-	document.addEventListener("yt-navigate-finish", async () => {
+	document.addEventListener('yt-navigate-finish', async () => {
 		await onViewChanged();
 	});
 
-	document.addEventListener("yt-action", async () => {
+	document.addEventListener('yt-action', async () => {
 		await onResize();
 	});
 
 	chrome.storage.onChanged.addListener(async () => {
-		for (const browse of app.querySelectorAll("ytd-browse")) {
+		for (const browse of app.querySelectorAll('ytd-browse')) {
 			await updateButtonVisibility(browse);
 		}
 	});

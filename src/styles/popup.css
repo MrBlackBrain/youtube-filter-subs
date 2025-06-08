@@ -151,7 +151,7 @@ label.switch {
 
 label.switch:after {
 	left: 2px;
-	content: "\2716";
+	content: '\2716';
 
 	top: 2px;
 	width: 18px;
@@ -170,7 +170,7 @@ label.switch:after {
 
 input.checkbox:checked + label.switch:after {
 	left: 28px;
-	content: "\2714";
+	content: '\2714';
 
 	top: 1px;
 	width: 20px;

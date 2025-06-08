@@ -130,7 +130,7 @@ form.filter-menu.position-fixed {
 	z-index: 2019;
 }
 
-ytd-browse[page-subtype="playlist"] form.filter-menu.position-fixed {
+ytd-browse[page-subtype='playlist'] form.filter-menu.position-fixed {
 	background-color: var(--yt-spec-base-background);
 }
 
@@ -215,66 +215,66 @@ div.shortsLockupViewModelHostMetadataSubhead {
 	display: none !important;
 }
 
-ytd-browse[page-subtype="subscriptions"] ytd-rich-grid-renderer > div#contents {
+ytd-browse[page-subtype='subscriptions'] ytd-rich-grid-renderer > div#contents {
 	padding-top: 0px !important;
 }
 
-ytd-browse[page-subtype="subscriptions"] ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[is-shorts]) {
+ytd-browse[page-subtype='subscriptions'] ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[is-shorts]) {
 	display: none !important;
 }
 
-ytd-browse[page-subtype="subscriptions"] ytd-rich-item-renderer[rendered-from-rich-grid][is-in-first-column] {
+ytd-browse[page-subtype='subscriptions'] ytd-rich-item-renderer[rendered-from-rich-grid][is-in-first-column] {
 	margin-left: calc(var(--ytd-rich-grid-item-margin) / 2) !important;
 }
 
-ytd-browse[page-subtype="subscriptions"] ytd-continuation-item-renderer {
+ytd-browse[page-subtype='subscriptions'] ytd-continuation-item-renderer {
 	width: 100% !important;
 }
 
-ytd-browse[page-subtype="subscriptions"] ytd-ghost-grid-renderer div.ghost-grid {
+ytd-browse[page-subtype='subscriptions'] ytd-ghost-grid-renderer div.ghost-grid {
 	margin-left: 0px !important;
 	padding-right: calc(var(--ytd-rich-grid-item-margin)) !important;
 }
 
-ytd-browse[page-subtype="playlist"] {
+ytd-browse[page-subtype='playlist'] {
 	padding-top: 0px !important;
 }
 
-ytd-browse[page-subtype="playlist"] yt-page-header-renderer {
+ytd-browse[page-subtype='playlist'] yt-page-header-renderer {
 	padding-top: 56px !important;
 }
 
-ytd-browse[page-subtype="playlist"] ytd-feed-filter-chip-bar-renderer {
+ytd-browse[page-subtype='playlist'] ytd-feed-filter-chip-bar-renderer {
 	display: none !important;
 }
 
-ytd-browse[page-subtype="subscriptions-channels"]:not([filter-mode="all"]) ytd-item-section-renderer,
-ytd-browse[page-subtype="subscriptions-channels"]:not([filter-query=""]) ytd-item-section-renderer {
+ytd-browse[page-subtype='subscriptions-channels']:not([filter-mode='all']) ytd-item-section-renderer,
+ytd-browse[page-subtype='subscriptions-channels']:not([filter-query='']) ytd-item-section-renderer {
 	border: none !important;
 }
 
-ytd-browse[page-subtype="subscriptions-channels"]:not([filter-mode="all"]) div.grid-subheader,
-ytd-browse[page-subtype="subscriptions-channels"]:not([filter-query=""]) div.grid-subheader {
+ytd-browse[page-subtype='subscriptions-channels']:not([filter-mode='all']) div.grid-subheader,
+ytd-browse[page-subtype='subscriptions-channels']:not([filter-query='']) div.grid-subheader {
 	display: none !important;
 }
 
-ytd-browse[page-subtype="subscriptions-channels"]:not([filter-mode="all"]) div#contents,
-ytd-browse[page-subtype="subscriptions-channels"]:not([filter-query=""]) div#contents {
+ytd-browse[page-subtype='subscriptions-channels']:not([filter-mode='all']) div#contents,
+ytd-browse[page-subtype='subscriptions-channels']:not([filter-query='']) div#contents {
 	margin-top: 0px !important;
 }
 
-ytd-browse[page-subtype="subscriptions-channels"]:not([filter-mode="all"]) ytd-expanded-shelf-contents-renderer,
-ytd-browse[page-subtype="subscriptions-channels"]:not([filter-query=""]) ytd-expanded-shelf-contents-renderer {
+ytd-browse[page-subtype='subscriptions-channels']:not([filter-mode='all']) ytd-expanded-shelf-contents-renderer,
+ytd-browse[page-subtype='subscriptions-channels']:not([filter-query='']) ytd-expanded-shelf-contents-renderer {
 	margin-bottom: 0px !important;
 }
 
-ytd-browse[page-subtype="subscriptions-channels"]:not([filter-mode="all"]) div#primary div#header-container,
-ytd-browse[page-subtype="subscriptions-channels"]:not([filter-query=""]) div#primary div#header-container {
+ytd-browse[page-subtype='subscriptions-channels']:not([filter-mode='all']) div#primary div#header-container,
+ytd-browse[page-subtype='subscriptions-channels']:not([filter-query='']) div#primary div#header-container {
 	margin-bottom: 24px !important;
 }
 
-ytd-browse[page-subtype="history"]:not([filter-mode="all"]) ytd-item-section-renderer div#header,
-ytd-browse[page-subtype="history"]:not([filter-query=""]) ytd-item-section-renderer div#header {
+ytd-browse[page-subtype='history']:not([filter-mode='all']) ytd-item-section-renderer div#header,
+ytd-browse[page-subtype='history']:not([filter-query='']) ytd-item-section-renderer div#header {
 	display: none !important;
 }
 
@@ -291,7 +291,7 @@ ytd-multi-page-menu-renderer:has(input#filter-query:not(:placeholder-shown)) div
 }
 
 .filter-spinner::before {
-	content: "";
+	content: '';
 	display: block;
 	margin: auto;
 	left: 50%;
@@ -325,6 +325,6 @@ div#frosted-glass.without-chipbar {
 	backdrop-filter: blur(48px) !important;
 }
 
-ytd-masthead[frosted-glass-mode="without-chipbar"] div#background.ytd-masthead {
+ytd-masthead[frosted-glass-mode='without-chipbar'] div#background.ytd-masthead {
 	display: none !important;
 }

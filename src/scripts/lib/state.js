@@ -25,7 +25,7 @@ export class FilterState {
 
 		this.settings = {
 			keyword: false,
-			default_keyword: "",
+			default_keyword: '',
 			multiselection: false,
 			responsive: false,
 			limit: 50,
@@ -51,26 +51,26 @@ export class FilterState {
 
 	setActiveMode(mode, browse) {
 		this.active.mode.set(location.href, mode);
-		browse.setAttribute("filter-mode", [...mode].join(" "));
+		browse.setAttribute('filter-mode', [...mode].join(' '));
 	}
 
 	setActiveModeProgress(mode_progress, browse) {
 		this.active.mode_progress.set(location.href, mode_progress);
-		browse.setAttribute("filter-mode-progress", [...mode_progress].join(" "));
+		browse.setAttribute('filter-mode-progress', [...mode_progress].join(' '));
 	}
 
 	getActiveQuery(browse) {
 		const query = this.active.query.get(location.href);
 		if (query) {
 			return query;
-		} else if (location.href.includes("/feed/subscriptions")) {
+		} else if (location.href.includes('/feed/subscriptions')) {
 			this.active.query.set(location.href, this.settings.default_keyword);
-			browse.setAttribute("filter-query", this.settings.default_keyword);
+			browse.setAttribute('filter-query', this.settings.default_keyword);
 			return this.settings.default_keyword;
 		} else {
-			this.active.query.set(location.href, "");
-			browse.setAttribute("filter-query", "");
-			return "";
+			this.active.query.set(location.href, '');
+			browse.setAttribute('filter-query', '');
+			return '';
 		}
 	}
 

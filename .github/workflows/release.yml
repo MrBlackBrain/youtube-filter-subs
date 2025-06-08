@@ -24,7 +24,7 @@ jobs:
 
       - name: zip for chrome
         run: zip -r "${{ steps.variables.outputs.ZIPFILE_NAME_CHROME }}" * -x browser_specific_settings.json
-    
+
       - name: zip for firefox
         run: |
           jq -s add manifest.json browser_specific_settings.json > manifest-firefox.json

@@ -1,23 +1,23 @@
 export function updateQueryRegex(browse, query, filterState) {
 	filterState.setActiveQuery(query);
-	browse.setAttribute("filter-query", query);
+	browse.setAttribute('filter-query', query);
 
 	const { queryList, notQueryList } = parseQuery(query);
 
-	const regExpList = queryList.map((q) => new RegExp(q.replace(/"/g, ""), "i"));
+	const regExpList = queryList.map((q) => new RegExp(q.replace(/"/g, ''), 'i'));
 	filterState.active.regex.set(location.href, regExpList);
 
-	const notRegExpList = notQueryList.map((q) => new RegExp(q.replace(/"/g, ""), "i"));
+	const notRegExpList = notQueryList.map((q) => new RegExp(q.replace(/"/g, ''), 'i'));
 	filterState.active.notRegex.set(location.href, notRegExpList);
 
-	browse.querySelectorAll("form.filter-menu input#filter-query").forEach((e) => (e.value = query));
+	browse.querySelectorAll('form.filter-menu input#filter-query').forEach((e) => (e.value = query));
 }
 
 export function updatePopupQueryRegex(containers, query, filterState, getPopupKey) {
 	const { queryList, notQueryList } = parseQuery(query);
 
-	const regExpList = queryList.map((q) => new RegExp(q.replace(/"/g, ""), "i"));
-	const notRegExpList = notQueryList.map((q) => new RegExp(q.replace(/"/g, ""), "i"));
+	const regExpList = queryList.map((q) => new RegExp(q.replace(/"/g, ''), 'i'));
+	const notRegExpList = notQueryList.map((q) => new RegExp(q.replace(/"/g, ''), 'i'));
 
 	for (const container of containers) {
 		const key = getPopupKey(container);
@@ -29,21 +29,21 @@ export function updatePopupQueryRegex(containers, query, filterState, getPopupKe
 function parseQuery(query) {
 	const queryList = [];
 	const notQueryList = [];
-	const tokenList = query.replace(/[.*+?^=!:${}()[\]/\\]/g, "\\$&").match(/[^\s|"-]+|"([^"]*)"|\||-/g);
+	const tokenList = query.replace(/[.*+?^=!:${}()[\]/\\]/g, '\\$&').match(/[^\s|"-]+|"([^"]*)"|\||-/g);
 	let nextOr = false;
 	let nextNot = false;
 
 	if (tokenList) {
 		for (const token of tokenList) {
-			if (token === "|") {
+			if (token === '|') {
 				nextOr = true;
-			} else if (token === "-") {
+			} else if (token === '-') {
 				nextNot = true;
 			} else {
-				const t = token.replace(/\|/g, "\\|");
+				const t = token.replace(/\|/g, '\\|');
 				if (nextOr && nextNot) {
 					if (notQueryList.length - 1 >= 0) {
-						notQueryList[notQueryList.length - 1] = notQueryList[notQueryList.length - 1] + "|" + t;
+						notQueryList[notQueryList.length - 1] = notQueryList[notQueryList.length - 1] + '|' + t;
 					} else {
 						notQueryList.push(t);
 					}
@@ -51,7 +51,7 @@ function parseQuery(query) {
 					nextNot = false;
 				} else if (nextOr) {
 					if (queryList.length - 1 >= 0) {
-						queryList[queryList.length - 1] = queryList[queryList.length - 1] + "|" + t;
+						queryList[queryList.length - 1] = queryList[queryList.length - 1] + '|' + t;
 					} else {
 						queryList.push(t);
 					}
@@ -76,8 +76,8 @@ export function matchQuery(text, filterState) {
 export function matchPopupQuery(container, target, filterState, getPopupKey) {
 	const text =
 		target.querySelector(
-			"yt-formatted-string#label.ytd-playlist-add-to-option-renderer, yt-formatted-string.ytd-notification-renderer.message, yt-formatted-string.ytd-guide-entry-renderer.title"
-		)?.textContent ?? "";
+			'yt-formatted-string#label.ytd-playlist-add-to-option-renderer, yt-formatted-string.ytd-notification-renderer.message, yt-formatted-string.ytd-guide-entry-renderer.title'
+		)?.textContent ?? '';
 	return (
 		matchPopupAllActiveRegex(container, text, filterState, getPopupKey) &&
 		matchPopupAllActiveNotRegex(container, text, filterState, getPopupKey)
