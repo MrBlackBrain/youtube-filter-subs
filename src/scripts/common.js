@@ -54,6 +54,11 @@ export const storage = [
 	"keyword_add_playlist",
 	"keyword_sidebar_channels",
 	"keyword_notification",
+
+	"queue_top_n",
+	"default_queue_top_n",
+	"button_label_queue_top_n",
+	"queue_count",
 ];
 
 export const default_order = [
@@ -67,6 +72,8 @@ export const default_order = [
 
 	"progress_unwatched",
 	"progress_watched",
+
+	"queue_top_n",
 
 	"channels_all",
 	"channels_personalized",
@@ -122,6 +129,9 @@ export const button_label = {
 	keyword_add_playlist: chrome.i18n.getMessage("keyword_add_playlist"),
 	keyword_sidebar_channels: chrome.i18n.getMessage("keyword_sidebar_channels"),
 	keyword_notification: chrome.i18n.getMessage("keyword_notification"),
+
+	queue_top_n: chrome.i18n.getMessage("button_queue_top_n") || "Queue Top N",
+	queue_count: chrome.i18n.getMessage("queue_count") || "Queue Count",
 };
 
 export const default_live = true;
@@ -148,6 +158,9 @@ export const default_keyword_add_playlist = true;
 export const default_keyword_sidebar_channels = true;
 export const default_keyword_notification = true;
 
+export const default_queue_top_n = true;
+export const default_queue_count = 3;
+
 export const defaultLimit = 500;
 export const minLimit = 100;
 export const maxLimit = 10000;
@@ -169,6 +182,8 @@ export const default_default_channels_personalized = false;
 export const default_default_channels_none = false;
 
 export const default_default_keyword = "";
+
+export const default_default_queue_top_n = false;
 
 export function value(value, defaultValue) {
 	return value === undefined ? defaultValue : value;

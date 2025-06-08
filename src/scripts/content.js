@@ -57,6 +57,7 @@ Promise.all([
 						createLoadButtonContainer,
 						createSpinner,
 						createNodeForCalc,
+						createQueueTopNButton,
 					} = uiModule;
 					const { changeMode, changeModeProgress } = modeModule;
 					const { includesStatus } = statusModule;
@@ -96,6 +97,7 @@ Promise.all([
 						createLoadButtonContainer,
 						createSpinner,
 						createNodeForCalc,
+						createQueueTopNButton,
 						changeMode,
 						changeModeProgress,
 						includesStatus,
@@ -140,7 +142,7 @@ function main(app, common, lang, modules) {
 		createQueryInputArea,
 		createSearchButton,
 		createLoadButtonContainer,
-
+		createQueueTopNButton,
 		createNodeForCalc,
 		changeMode,
 		changeModeProgress,
@@ -148,6 +150,165 @@ function main(app, common, lang, modules) {
 	} = modules;
 	// Initialize shared UI elements
 	const load_button_container = createLoadButtonContainer(common, filterState);
+
+	// Queue Top N functionality handler
+	function handleQueueTopN(browse) {
+		// Get queue count from settings panel
+		const queueCount = filterState.settings.queue_count || common.default_queue_count;
+
+		if (!common.isSubscriptions(location.href)) {
+			console.log("Not on subscriptions page, trying anyway...");
+		}
+
+		// Find the contents container
+		const contentsContainer = browse.querySelector("#contents");
+		if (!contentsContainer) {
+			console.log("Could not find #contents container");
+			return;
+		}
+
+		// Get all video elements from the contents container
+		const allVideoElements = contentsContainer.querySelectorAll("ytd-rich-item-renderer");
+
+		// Filter to only visible videos (display is not "none")
+		const visibleVideos = [];
+		const seenVideoTitles = new Set();
+		const seenElements = new Set();
+
+		for (const videoElement of allVideoElements) {
+			// Check if the video is visible by checking computed display style
+			const computedStyle = window.getComputedStyle(videoElement);
+			const isVisible = computedStyle.display !== "none";
+
+			if (!isVisible) {
+				console.log(`Skipping hidden video element`);
+				continue;
+			}
+
+			// Skip if we've already processed this exact element
+			if (seenElements.has(videoElement)) {
+				console.log(`Skipping already processed element`);
+				continue;
+			}
+
+			// Find the video title using the #video-title selector
+			const titleElement = videoElement.querySelector("#video-title");
+			let videoTitle = "";
+			let videoLink = null;
+
+			if (titleElement) {
+				// Get title from the element
+				videoTitle =
+					titleElement.textContent?.trim() ||
+					titleElement.title?.trim() ||
+					titleElement.getAttribute("aria-label")?.trim() ||
+					titleElement.innerText?.trim() ||
+					"";
+
+				if (videoTitle) {
+					// Find the video link
+					videoLink = titleElement.href
+						? titleElement
+						: videoElement.querySelector('a[href*="/watch"], a[href*="/shorts"]');
+				} else {
+					console.log(`#video-title element found but no text content`);
+				}
+			} else {
+				console.log(`Could not find #video-title element in video`);
+			}
+
+			// Clean up the title (remove extra whitespace, normalize)
+			videoTitle = videoTitle.replace(/\s+/g, " ").trim();
+
+			if (videoTitle && videoLink) {
+				// Only add if we have a valid title and haven't seen it before
+				if (!seenVideoTitles.has(videoTitle)) {
+					seenVideoTitles.add(videoTitle);
+					seenElements.add(videoElement);
+					visibleVideos.push(videoElement);
+				} else {
+					console.log(`Skipping duplicate video with title: "${videoTitle}"`);
+				}
+			} else {
+				console.log(`Could not find video title or link in element`);
+			}
+		}
+
+		const topNVideos = visibleVideos.slice(0, queueCount);
+
+		if (topNVideos.length === 0) {
+			console.log("No videos found to queue");
+			return;
+		}
+
+		let queuedCount = 0;
+
+		topNVideos.forEach((videoElement, index) => {
+			// Add delay to prevent overwhelming YouTube's API
+			setTimeout(() => {
+				try {
+					// Find the video's menu button (3 dots) - try multiple selectors
+					const menuButtonSelectors = [
+						'button[aria-label*="Action menu"]',
+						'button[aria-label*="More actions"]',
+						'yt-icon-button[aria-label*="Action menu"]',
+						'button[aria-label*="actions"]',
+						'#button[aria-label*="Action menu"]', // Sometimes it's an ID
+					];
+
+					let menuButton = null;
+					for (const selector of menuButtonSelectors) {
+						menuButton = videoElement.querySelector(selector);
+						if (menuButton) {
+							break;
+						}
+					}
+
+					if (menuButton) {
+						// Click the menu button
+						menuButton.click();
+
+						// Wait for menu to appear, then find "Add to queue" option
+						setTimeout(() => {
+							// Look for the "Add to queue" menu item by finding the text first
+							const formattedStrings = document.querySelectorAll("yt-formatted-string");
+							let addToQueueItem = null;
+
+							for (const formattedString of formattedStrings) {
+								if (formattedString.textContent && formattedString.textContent.trim() === "Add to queue") {
+									// Found the text, now find the clickable parent
+									addToQueueItem =
+										formattedString.closest("ytd-menu-service-item-renderer") ||
+										formattedString.closest("tp-yt-paper-item");
+									break;
+								}
+							}
+
+							if (addToQueueItem) {
+								// Click the menu item
+								addToQueueItem.click();
+								queuedCount++;
+							} else {
+								// Only close menu if we couldn't find the add to queue option
+								setTimeout(() => {
+									document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", keyCode: 27 }));
+								}, 50);
+							}
+						}, 300);
+					} else {
+						console.log(`Could not find menu button for video ${index + 1}`);
+					}
+				} catch (error) {
+					console.error(`Error queueing video ${index + 1}:`, error);
+				}
+			}, index * 400); // Stagger the operations with more time
+		});
+
+		// Show feedback to user
+		setTimeout(() => {
+			console.log(`Queue operation completed. Successfully queued ${queuedCount} out of ${topNVideos.length} video(s)`);
+		}, topNVideos.length * 400 + 500);
+	}
 
 	async function updateButtonVisibility(browse) {
 		await chrome.storage.local.get(common.storage).then((data) => {
@@ -174,8 +335,12 @@ function main(app, common, lang, modules) {
 				filterState,
 				common
 			);
+
 			updateQueryRegex(browse, filterState.getActiveQuery(browse), filterState);
 			updateVisibility(browse, filterState, lang, selectors, includesStatus, matchQuery);
+
+			// Update queue button visibility based on progress mode
+			updateQueueButtonVisibility();
 
 			// Update popup menu visibility
 			updatePopupMenuVisibility(app);
@@ -246,6 +411,14 @@ function main(app, common, lang, modules) {
 				span.innerHTML = button_text;
 				menu.appendChild(span);
 			}
+		} else if (mode === "queue_top_n") {
+			const span = menu.querySelector("span.filter-button." + mode);
+			if (span) {
+				const queueCount = data.queue_count || common.default_queue_count;
+				span.innerHTML = button_text.replace("N", queueCount);
+				span.title = `Add the top ${queueCount} videos to your queue`;
+				menu.appendChild(span);
+			}
 		} else {
 			const span = menu.querySelector("span.filter-button." + mode);
 			if (span) {
@@ -277,6 +450,7 @@ function main(app, common, lang, modules) {
 			channels_all: common.value(data.channels_all, common.default_channels_all),
 			channels_personalized: common.value(data.channels_personalized, common.default_channels_personalized),
 			channels_none: common.value(data.channels_none, common.default_channels_none),
+			queue_top_n: common.value(data.queue_top_n, common.default_queue_top_n),
 		};
 	}
 
@@ -315,6 +489,7 @@ function main(app, common, lang, modules) {
 			notification_off,
 			progress_unwatched,
 			progress_watched,
+			queue_top_n,
 		} = settings;
 
 		displayQuery(
@@ -350,6 +525,8 @@ function main(app, common, lang, modules) {
 
 		displayQuery(browse, "span.filter-button.progress_unwatched", display(progress_unwatched));
 		displayQuery(browse, "span.filter-button.progress_watched", display(progress_watched));
+
+		displayQuery(browse, "span.filter-button.queue_top_n", display(queue_top_n));
 
 		displayQuery(browse, "span.filter-button-channels.all", "none");
 		displayQuery(browse, "span.filter-button-channels.channels_all", "none");
@@ -440,6 +617,13 @@ function main(app, common, lang, modules) {
 		displayQuery(browse, "span.filter-button-subscriptions.short", display(short));
 		displayQuery(browse, "span.filter-button-subscriptions.scheduled", display(scheduled));
 		displayQuery(browse, "span.filter-query", display(filterState.settings.keyword));
+	}
+
+	function updateQueueButtonVisibility() {
+		// Queue button visibility is already handled by setSubscriptionsVisibility
+		// This function was previously used to hide/show based on progress mode, but now
+		// the button should always be available (when visible) regardless of progress state
+		// No additional logic needed here since visibility is controlled by user settings
 	}
 
 	function updatePopupMenuVisibility(app) {
@@ -649,7 +833,10 @@ function main(app, common, lang, modules) {
 				false,
 				browse,
 				common,
-				(mode, multi, sub, browse) => changeModeProgress(mode, multi, sub, browse, filterState, common),
+				(mode, multi, sub, browse) => {
+					changeModeProgress(mode, multi, sub, browse, filterState, common);
+					updateQueueButtonVisibility();
+				},
 				(browse) => updateVisibility(browse, filterState, lang, selectors, includesStatus, matchQuery),
 				filterState.settings.multiselection
 			)
@@ -662,7 +849,10 @@ function main(app, common, lang, modules) {
 				false,
 				browse,
 				common,
-				(mode, multi, sub, browse) => changeModeProgress(mode, multi, sub, browse, filterState, common),
+				(mode, multi, sub, browse) => {
+					changeModeProgress(mode, multi, sub, browse, filterState, common);
+					updateQueueButtonVisibility();
+				},
 				(browse) => updateVisibility(browse, filterState, lang, selectors, includesStatus, matchQuery),
 				filterState.settings.multiselection
 			)
@@ -684,6 +874,26 @@ function main(app, common, lang, modules) {
 		select.appendChild(createOption(common.button_label.scheduled, "scheduled"));
 
 		menu.appendChild(select);
+
+		// Queue Top N Button - show based on settings
+		console.log("Creating menu - checking if on subscriptions page:", {
+			currentUrl: location.href,
+			isSubscriptions: common.isSubscriptions(location.href),
+		});
+
+		if (common.isSubscriptions(location.href)) {
+			console.log("Creating Queue Top N button");
+			const queueCount = filterState.settings.queue_count || common.default_queue_count;
+			const buttonText = (filterState.settings.button_label_queue_top_n || common.button_label.queue_top_n).replace(
+				"N",
+				queueCount
+			);
+			const queueTopNButton = createQueueTopNButton(browse, common, handleQueueTopN, queueCount, buttonText);
+			menu.appendChild(queueTopNButton);
+			console.log("Queue Top N button created and added to menu");
+		} else {
+			console.log("Not on subscriptions page, skipping Queue Top N button creation");
+		}
 
 		const input = createQueryInput(menu, browse, filterState);
 		menu.appendChild(

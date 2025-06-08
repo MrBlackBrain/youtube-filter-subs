@@ -32,6 +32,7 @@ export class FilterState {
 			keyword_add_playlist: false,
 			keyword_sidebar_channels: false,
 			keyword_notification: false,
+			queue_count: 3,
 		};
 
 		this.popupMenu = new Map();

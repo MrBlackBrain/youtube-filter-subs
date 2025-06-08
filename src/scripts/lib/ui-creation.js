@@ -174,3 +174,19 @@ export function createNodeForCalc(menu) {
 	nodeForCalc.classList.add("filter-forCalc");
 	return nodeForCalc;
 }
+
+export function createQueueTopNButton(browse, common, queueHandler, queueCount, buttonText) {
+	console.log("createQueueTopNButton called");
+	const button = document.createElement("span");
+	button.classList.add("filter-button", "filter-queue-top-n", "queue_top_n");
+	button.innerText = buttonText || `Queue Top ${queueCount}`;
+	button.title = `Add the top ${queueCount} videos to your queue`;
+	button.style.display = "none";
+
+	button.addEventListener("click", () => {
+		queueHandler(browse);
+	});
+
+	console.log("Queue Top N button created");
+	return button;
+}

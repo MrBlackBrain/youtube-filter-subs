@@ -152,6 +152,19 @@ function main(common, settings, progress, data) {
 			common.button_label.clear
 		)
 	);
+	settings_list_1.appendChild(
+		settings.createRow(
+			data.button_label_queue_top_n,
+			common.button_label.queue_top_n,
+			"queue_top_n",
+			data.queue_top_n,
+			true,
+			data.default_queue_top_n ? data.default_queue_top_n : false,
+			"subscriptions",
+			(input) => chrome.storage.local.set({ button_label_queue_top_n: input.value }),
+			common.button_label.clear
+		)
+	);
 
 	settings_list_6.appendChild(
 		settings.createRow(
@@ -240,6 +253,27 @@ function main(common, settings, progress, data) {
 			common.maxLimit,
 			common.stepLimit,
 			common.limit
+		)
+	);
+	settings_list_4.appendChild(
+		settings.createRow(
+			common.button_label.queue_count || "Queue Count",
+			undefined,
+			"queue_count",
+			data.queue_count,
+			common.default_queue_count,
+			undefined,
+			undefined,
+			(input) =>
+				chrome.storage.local.set({
+					queue_count: Math.max(1, Math.min(20, parseInt(input.value) || common.default_queue_count)),
+				}),
+			undefined,
+			"step",
+			1,
+			20,
+			1,
+			(value) => Math.max(1, Math.min(20, parseInt(value) || common.default_queue_count))
 		)
 	);
 

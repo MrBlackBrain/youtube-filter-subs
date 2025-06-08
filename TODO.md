@@ -48,6 +48,20 @@ This document outlines the plan to refactor the codebase to improve its structur
 - [x] 7.6. Update documentation
 - [x] 7.7. Clean up root directory
 
+### Phase 8: Queue 'Watch Later' Feature ✅ COMPLETED
+
+- [x] 8.1. Create a new button for queuing videos
+- [x] 8.2. Show button only when "unwatched" is selected
+- [x] 8.3. Add top 3 unwatched videos to a queue on click
+
+### Phase 8.4: "Watch Later" – Top N Queue & Popup Option
+
+- [ ] 8.4.1. Allow user to set queue length (N)
+- [ ] 8.4.2. Update button text dynamically
+- [ ] 8.4.3. Option to show Top N in popup modal
+- [ ] 8.4.4. Generalize queue logic
+- [ ] 8.4.5. UI/UX
+
 ---
 
 ## Detailed Task Descriptions
@@ -199,3 +213,50 @@ To improve maintainability, scalability, and clarity, refactor the repository to
 
 - ✅ All source files have been moved to the `src/` directory.
 - ✅ Root directory now only contains configuration, manifest, and documentation files.
+
+## Phase 8: Queue 'Watch Later' Feature ✅ COMPLETED
+
+This feature introduces a new button that allows users to quickly queue up the top 3 unwatched videos from their subscriptions feed.
+
+### 8.1. Create a new button for queuing videos ✅ COMPLETED
+
+- ✅ Designed and implemented a "Queue Top 3" button.
+- ✅ Placed the button in the filter menu on the YouTube subscriptions page, near the existing filters.
+- ✅ Button integrates seamlessly with the existing UI styling and layout.
+
+### 8.3. Add top 3 unwatched videos to a queue on click ✅ COMPLETED
+
+- ✅ When the button is clicked, identifies the top 3 visible videos in the current filtered view.
+- ✅ Uses CSS display property detection to only consider truly visible videos (not hidden by filters).
+- ✅ For each of the top 3 videos, programmatically triggers YouTube's native "Add to queue" action via the context menu.
+- ✅ Implements title-based duplicate detection to ensure 3 different videos are queued.
+- ✅ Includes proper error handling and user feedback through console logging.
+
+## Phase 8.4: "Watch Later" – Top N Queue & Popup Option
+
+### 8.4.1. Allow user to set queue length (N)
+
+- Add a user-configurable setting for "Queue Top N" (default: 3, user-editable).
+- Store this setting in extension storage (sync/local).
+- Update the queue logic to use the user-defined N instead of hardcoded 3.
+
+### 8.4.2. Update button text dynamically
+
+- Change the button label to reflect the current N (e.g., "Queue Top 5").
+- Ensure the label updates immediately if the user changes the setting.
+
+### 8.4.3. Option to show Top N in popup modal
+
+- Add a new option in the popup UI: "Show Top N in Popup".
+- When enabled, display a modal in the popup listing the top N unwatched videos (title, thumbnail, maybe channel).
+- Provide a "Queue All" button in the modal to trigger the queueing action for those videos.
+
+### 8.4.4. Generalize queue logic
+
+- Refactor queue logic to support any N, not just 3.
+- Ensure duplicate detection and error handling work for arbitrary N.
+
+### 8.4.5. UI/UX
+
+- Ensure popup modal is styled consistently with the extension.
+- Provide user feedback (success/error) in both the subscriptions page and popup modal.
