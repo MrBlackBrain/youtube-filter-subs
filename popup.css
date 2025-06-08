@@ -1,332 +1,332 @@
 body {
-    display: flex;
-    justify-content: center;
-    margin: 0;
-    text-wrap: nowrap;
+	display: flex;
+	justify-content: center;
+	margin: 0;
+	text-wrap: nowrap;
 }
 
 div.settings_table {
-    display: table;
-    width: max-content;
+	display: table;
+	width: max-content;
 }
 
 div.settings_row {
-    display: table-row;
-    width: max-content;
+	display: table-row;
+	width: max-content;
 }
 
 div.settings_cell {
-    display: table-cell;
-    width: max-content;
-    padding: 0px 8px;
+	display: table-cell;
+	width: max-content;
+	padding: 0px 8px;
 }
 
 div.settings_list {
-    display: table-row-group;
-    width: max-content;
+	display: table-row-group;
+	width: max-content;
 }
 
 div.settings_footer {
-    display: table-caption;
-    caption-side: bottom;
+	display: table-caption;
+	caption-side: bottom;
 }
 
 div.row {
-    display: table-row;
+	display: table-row;
 }
 
 div.header-row {
-    display: table-row;
-    width: 348px;
+	display: table-row;
+	width: 348px;
 }
 
 div.spacer-row {
-    display: table-row;
+	display: table-row;
 }
 
 div.row.dragging {
-    background-color: rgba(255, 0, 0, 0.2);
+	background-color: rgba(255, 0, 0, 0.2);
 }
 
 div.row.touching {
-    visibility: hidden;
+	visibility: hidden;
 }
 
 div.row.projection {
-    background-color: rgba(255, 0, 0, 0.2);
-    position: fixed;
-    white-space: nowrap;
+	background-color: rgba(255, 0, 0, 0.2);
+	position: fixed;
+	white-space: nowrap;
 }
 
 div.label {
-    display: table-cell;
-    padding: 8px;
-    vertical-align: middle;
+	display: table-cell;
+	padding: 8px;
+	vertical-align: middle;
 }
 
 div.svg-label {
-    text-align: center;
-    vertical-align: middle;
+	text-align: center;
+	vertical-align: middle;
 }
 
 div.draggable-label {
-    display: table-cell;
-    cursor: grab;
-    padding: 8px;
-    vertical-align: middle;
+	display: table-cell;
+	cursor: grab;
+	padding: 8px;
+	vertical-align: middle;
 }
 
 div.header-label {
-    display: table-cell;
-    padding: 8px;
-    text-align: center;
-    vertical-align: middle;
+	display: table-cell;
+	padding: 8px;
+	text-align: center;
+	vertical-align: middle;
 }
 
 div.header-label.header-keyword-4 {
-    width: 176px;
+	width: 176px;
 }
 
 div.spacer-label {
-    display: table-cell;
-    padding: 4px;
+	display: table-cell;
+	padding: 4px;
 }
 
 input.label {
-    width: 120px;
-    height: 30px;
-    vertical-align: middle;
+	width: 120px;
+	height: 30px;
+	vertical-align: middle;
 }
 
 input.keyword_input {
-    width: 100%;
-    height: 30px;
-    vertical-align: middle;
+	width: 100%;
+	height: 30px;
+	vertical-align: middle;
 }
 
 input.step {
-    width: 100%;
-    height: 30px;
-    vertical-align: middle;
+	width: 100%;
+	height: 30px;
+	vertical-align: middle;
 }
 
 span.filter-clear {
-    cursor: pointer;
-    height: 30px;
-    vertical-align: middle;
+	cursor: pointer;
+	height: 30px;
+	vertical-align: middle;
 }
 
 svg.filter-clear {
-    margin: 4px;
-    height: 20px;
-    width: 20px;
-    vertical-align: middle;
+	margin: 4px;
+	height: 20px;
+	width: 20px;
+	vertical-align: middle;
 }
 
 div.toggle {
-    display: table-cell;
-    padding: 8px;
-    vertical-align: middle;
+	display: table-cell;
+	padding: 8px;
+	vertical-align: middle;
 }
 
 svg.filter-button {
-    height: 1.5em;
-    width: 1.5em;
+	height: 1.5em;
+	width: 1.5em;
 }
 
 input.checkbox {
-    display: none;
+	display: none;
 }
 
 label.switch {
-    width: 50px;
-    height: 22px;
-    border-radius: 22px;
-    border-style: solid;
-    border-width: 1px;
-    display: block;
-    position: relative;
-    transition: all 75ms cubic-bezier(0.4, 0, 0.2, 1);
+	width: 50px;
+	height: 22px;
+	border-radius: 22px;
+	border-style: solid;
+	border-width: 1px;
+	display: block;
+	position: relative;
+	transition: all 75ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 label.switch:after {
-    left: 2px;
-    content: "\2716";
+	left: 2px;
+	content: "\2716";
 
-    top: 2px;
-    width: 18px;
-    height: 18px;
-    line-height: 18px;
-    border-radius: 100%;
-    border-style: solid;
-    border-width: 0px;
-    cursor: pointer;
-    position: absolute;
-    transition: all 75ms cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
+	top: 2px;
+	width: 18px;
+	height: 18px;
+	line-height: 18px;
+	border-radius: 100%;
+	border-style: solid;
+	border-width: 0px;
+	cursor: pointer;
+	position: absolute;
+	transition: all 75ms cubic-bezier(0.4, 0, 0.2, 1);
+	display: flex;
+	justify-content: center;
+	align-items: flex-end;
 }
 
-input.checkbox:checked+label.switch:after {
-    left: 28px;
-    content: "\2714";
+input.checkbox:checked + label.switch:after {
+	left: 28px;
+	content: "\2714";
 
-    top: 1px;
-    width: 20px;
-    height: 20px;
-    line-height: 20px;
+	top: 1px;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
 }
 
 input.rate {
-    padding: 8px;
-    width: 60px;
+	padding: 8px;
+	width: 60px;
 }
 
 div#reset_container {
-    display: flex;
-    justify-content: flex-end;
-    padding: 8px;
+	display: flex;
+	justify-content: flex-end;
+	padding: 8px;
 }
 
 div#reset_progress {
-    height: 4px;
-    width: 0;
+	height: 4px;
+	width: 0;
 }
 
 div#reset_progress.progress {
-    width: 100%;
-    transition: width 1000ms linear;
+	width: 100%;
+	transition: width 1000ms linear;
 }
 
 div#reset_progress.done {
-    width: 100%;
+	width: 100%;
 }
 
 @media (prefers-color-scheme: light) {
-    body {
-        background-color: rgb(255, 255, 255);
-    }
+	body {
+		background-color: rgb(255, 255, 255);
+	}
 
-    div.settings_table,
-    div.settings_footer {
-        background-color: rgb(249, 249, 249);
-    }
+	div.settings_table,
+	div.settings_footer {
+		background-color: rgb(249, 249, 249);
+	}
 
-    div.label,
-    div.draggable-label,
-    div.header-label {
-        color: rgb(0, 0, 0);
-        fill: rgb(0, 0, 0);
-    }
+	div.label,
+	div.draggable-label,
+	div.header-label {
+		color: rgb(0, 0, 0);
+		fill: rgb(0, 0, 0);
+	}
 
-    label.switch {
-        background-color: rgb(187, 187, 187);
-        border-color: rgb(73, 73, 73);
-    }
+	label.switch {
+		background-color: rgb(187, 187, 187);
+		border-color: rgb(73, 73, 73);
+	}
 
-    label.switch:after {
-        background-color: rgb(73, 73, 73);
-        color: rgb(255, 255, 255);
-    }
+	label.switch:after {
+		background-color: rgb(73, 73, 73);
+		color: rgb(255, 255, 255);
+	}
 
-    input.checkbox:checked+label.switch {
-        background-color: rgb(26, 187, 26);
-        border-color: rgb(26, 187, 26);
-    }
+	input.checkbox:checked + label.switch {
+		background-color: rgb(26, 187, 26);
+		border-color: rgb(26, 187, 26);
+	}
 
-    input.checkbox:checked+label.switch:after {
-        background-color: rgb(249, 255, 249);
-        color: rgb(0, 0, 0);
-    }
+	input.checkbox:checked + label.switch:after {
+		background-color: rgb(249, 255, 249);
+		color: rgb(0, 0, 0);
+	}
 
-    input#reset {
-        background-color: rgb(249, 249, 249);
-        border-color: rgb(187, 187, 187);
-        color: rgb(0, 0, 0);
-    }
+	input#reset {
+		background-color: rgb(249, 249, 249);
+		border-color: rgb(187, 187, 187);
+		color: rgb(0, 0, 0);
+	}
 
-    div#reset_progress.progress {
-        background-color: rgb(249, 73, 73);
-    }
+	div#reset_progress.progress {
+		background-color: rgb(249, 73, 73);
+	}
 
-    div#reset_progress.done {
-        background-color: rgb(73, 249, 73);
-    }
+	div#reset_progress.done {
+		background-color: rgb(73, 249, 73);
+	}
 
-    div.subscriptions {
-        background-color: rgb(219, 219, 219);
-    }
+	div.subscriptions {
+		background-color: rgb(219, 219, 219);
+	}
 
-    div.progress {
-        background-color: rgb(219, 219, 219);
-    }
+	div.progress {
+		background-color: rgb(219, 219, 219);
+	}
 
-    div.channels {
-        background-color: rgb(219, 219, 219);
-    }
+	div.channels {
+		background-color: rgb(219, 219, 219);
+	}
 }
 
 @media (prefers-color-scheme: dark) {
-    body {
-        background-color: rgb(0, 0, 0);
-    }
+	body {
+		background-color: rgb(0, 0, 0);
+	}
 
-    div.settings_table,
-    div.settings_footer {
-        background-color: rgb(26, 26, 26);
-    }
+	div.settings_table,
+	div.settings_footer {
+		background-color: rgb(26, 26, 26);
+	}
 
-    div.label,
-    div.draggable-label,
-    div.header-label {
-        color: rgb(255, 255, 255);
-        fill: rgb(255, 255, 255);
-    }
+	div.label,
+	div.draggable-label,
+	div.header-label {
+		color: rgb(255, 255, 255);
+		fill: rgb(255, 255, 255);
+	}
 
-    label.switch {
-        background-color: rgb(73, 73, 73);
-        border-color: rgb(187, 187, 187);
-    }
+	label.switch {
+		background-color: rgb(73, 73, 73);
+		border-color: rgb(187, 187, 187);
+	}
 
-    label.switch:after {
-        background-color: rgb(187, 187, 187);
-        color: rgb(0, 0, 0);
-    }
+	label.switch:after {
+		background-color: rgb(187, 187, 187);
+		color: rgb(0, 0, 0);
+	}
 
-    input.checkbox:checked+label.switch {
-        background-color: rgb(73, 249, 73);
-        border-color: rgb(73, 249, 73);
-    }
+	input.checkbox:checked + label.switch {
+		background-color: rgb(73, 249, 73);
+		border-color: rgb(73, 249, 73);
+	}
 
-    input.checkbox:checked+label.switch:after {
-        background-color: rgb(26, 73, 26);
-        color: rgb(255, 255, 255);
-    }
+	input.checkbox:checked + label.switch:after {
+		background-color: rgb(26, 73, 26);
+		color: rgb(255, 255, 255);
+	}
 
-    input#reset {
-        background-color: rgb(73, 73, 73);
-        border-color: rgb(187, 187, 187);
-        color: rgb(255, 255, 255);
-    }
+	input#reset {
+		background-color: rgb(73, 73, 73);
+		border-color: rgb(187, 187, 187);
+		color: rgb(255, 255, 255);
+	}
 
-    div#reset_progress.progress {
-        background-color: rgb(249, 73, 73);
-    }
+	div#reset_progress.progress {
+		background-color: rgb(249, 73, 73);
+	}
 
-    div#reset_progress.done {
-        background-color: rgb(73, 249, 73);
-    }
+	div#reset_progress.done {
+		background-color: rgb(73, 249, 73);
+	}
 
-    div.subscriptions {
-        background-color: rgb(56, 56, 56);
-    }
+	div.subscriptions {
+		background-color: rgb(56, 56, 56);
+	}
 
-    div.progress {
-        background-color: rgb(56, 56, 56);
-    }
+	div.progress {
+		background-color: rgb(56, 56, 56);
+	}
 
-    div.channels {
-        background-color: rgb(56, 56, 56);
-    }
+	div.channels {
+		background-color: rgb(56, 56, 56);
+	}
 }

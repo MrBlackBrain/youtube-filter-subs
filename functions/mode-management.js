@@ -94,13 +94,63 @@ export function changeModeProgress(mode, multi, sub, browse, filterState, common
 			if (modes.size === 0) {
 				modes.add("progress_all");
 			}
-		} else {
-			if (mode === "progress_all") {
-				modes.clear();
-			} else {
-				modes.delete("progress_all");
+			// When a progress button is deselected, reset main filter to show all videos
+			if (sub && (mode === "progress_unwatched" || mode === "progress_watched")) {
+				const mainModes = new Set(["all"]);
+				filterState.setActiveMode(mainModes, browse);
+				// Update main filter UI
+				browse
+					.querySelectorAll("span.filter-button-subscriptions, span.filter-button-channels")
+					.forEach((n) => n.classList.remove("selected"));
+				browse.querySelectorAll("span.filter-button-subscriptions.all").forEach((n) => n.classList.add("selected"));
+				browse.querySelectorAll("option.filter-button-subscriptions").forEach((n) => {
+					n.selected = false;
+					n.classList.remove("selected");
+					const i = n.innerHTML.indexOf("✔ ");
+					if (i !== -1) {
+						n.innerHTML = n.innerHTML.substring(i + 1);
+					}
+				});
+				browse.querySelectorAll("option.filter-button-subscriptions.all").forEach((n) => {
+					n.classList.add("selected");
+					n.selected = true;
+				});
 			}
-			modes.add(mode);
+		} else {
+			// Handle single-selection mode deselection
+			if (!multi && sub && (mode === "progress_unwatched" || mode === "progress_watched")) {
+				// If clicking an already selected progress button in single-selection mode, deselect it
+				modes.clear();
+				modes.add("progress_all");
+				// Reset main filter to show all videos
+				const mainModes = new Set(["all"]);
+				filterState.setActiveMode(mainModes, browse);
+				// Update main filter UI
+				browse
+					.querySelectorAll("span.filter-button-subscriptions, span.filter-button-channels")
+					.forEach((n) => n.classList.remove("selected"));
+				browse.querySelectorAll("span.filter-button-subscriptions.all").forEach((n) => n.classList.add("selected"));
+				browse.querySelectorAll("option.filter-button-subscriptions").forEach((n) => {
+					n.selected = false;
+					n.classList.remove("selected");
+					const i = n.innerHTML.indexOf("✔ ");
+					if (i !== -1) {
+						n.innerHTML = n.innerHTML.substring(i + 1);
+					}
+				});
+				browse.querySelectorAll("option.filter-button-subscriptions.all").forEach((n) => {
+					n.classList.add("selected");
+					n.selected = true;
+				});
+			} else {
+				// Normal selection logic
+				if (mode === "progress_all") {
+					modes.clear();
+				} else {
+					modes.delete("progress_all");
+				}
+				modes.add(mode);
+			}
 		}
 	}
 

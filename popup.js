@@ -135,7 +135,8 @@ function main(common, settings, progress, data) {
 			true,
 			data.default_progress_unwatched ? data.default_progress_unwatched : false,
 			"progress",
-			(input) => chrome.storage.local.set({ button_label_progress_unwatched: input.value })
+			(input) => chrome.storage.local.set({ button_label_progress_unwatched: input.value }),
+			common.button_label.clear
 		)
 	);
 	settings_list_1.appendChild(
@@ -147,7 +148,8 @@ function main(common, settings, progress, data) {
 			true,
 			data.default_progress_watched ? data.default_progress_watched : false,
 			"progress",
-			(input) => chrome.storage.local.set({ button_label_progress_watched: input.value })
+			(input) => chrome.storage.local.set({ button_label_progress_watched: input.value }),
+			common.button_label.clear
 		)
 	);
 
@@ -271,55 +273,55 @@ function main(common, settings, progress, data) {
 				settings.registerDraggableRow(div, draggable_label);
 			}
 		}
+	}
 
-		for (const settings_list of settings_lists) {
-			for (const input of settings_list.querySelectorAll("input.visibility_checkbox")) {
-				input.addEventListener("change", () => {
-					let ids = {};
+	for (const settings_list of settings_lists) {
+		for (const input of settings_list.querySelectorAll("input.visibility_checkbox")) {
+			input.addEventListener("change", () => {
+				let ids = {};
 
-					if (!input.checked) {
-						const mode = "default_" + input.id;
-						const checkbox = settings_list.querySelector("input#" + mode);
-						if (checkbox) {
-							checkbox.checked = false;
-							ids[mode] = false;
-						}
+				if (!input.checked) {
+					const mode = "default_" + input.id;
+					const checkbox = settings_list.querySelector("input#" + mode);
+					if (checkbox) {
+						checkbox.checked = false;
+						ids[mode] = false;
 					}
-
-					ids[input.id] = input.checked;
-					chrome.storage.local.set(ids);
-				});
-			}
-
-			for (const group of groups) {
-				for (const input of settings_list.querySelectorAll("input.default_checkbox." + group)) {
-					input.addEventListener("change", () => {
-						chrome.storage.local.get(common.storage, (data) => {
-							let ids = {};
-
-							if (input.checked) {
-								const mode = input.id.substring(8);
-								const checkbox = settings_list.querySelector("input#" + mode);
-								if (checkbox) {
-									checkbox.checked = true;
-									ids[mode] = true;
-								}
-							}
-
-							if (input.checked && !data.multiselection) {
-								settings_list.querySelectorAll("input.default_checkbox." + group).forEach((n) => {
-									if (n !== input) {
-										n.checked = false;
-										ids[n.id] = false;
-									}
-								});
-							}
-
-							ids[input.id] = input.checked;
-							chrome.storage.local.set(ids);
-						});
-					});
 				}
+
+				ids[input.id] = input.checked;
+				chrome.storage.local.set(ids);
+			});
+		}
+
+		for (const group of groups) {
+			for (const input of settings_list.querySelectorAll("input.default_checkbox." + group)) {
+				input.addEventListener("change", () => {
+					chrome.storage.local.get(common.storage, (data) => {
+						let ids = {};
+
+						if (input.checked) {
+							const mode = input.id.substring(8);
+							const checkbox = settings_list.querySelector("input#" + mode);
+							if (checkbox) {
+								checkbox.checked = true;
+								ids[mode] = true;
+							}
+						}
+
+						if (input.checked && !data.multiselection) {
+							settings_list.querySelectorAll("input.default_checkbox." + group).forEach((n) => {
+								if (n !== input) {
+									n.checked = false;
+									ids[n.id] = false;
+								}
+							});
+						}
+
+						ids[input.id] = input.checked;
+						chrome.storage.local.set(ids);
+					});
+				});
 			}
 		}
 	}
