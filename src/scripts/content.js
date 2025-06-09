@@ -334,7 +334,7 @@ function main(app, common, lang, modules) {
 			);
 			changeModeProgress(
 				filterState.getActiveModeProgress().values().next().value,
-				filterState.settings.multiselection,
+				true, // Progress buttons are always multi-selectable
 				false,
 				browse,
 				filterState,
@@ -452,6 +452,7 @@ function main(app, common, lang, modules) {
 			notification_off: common.value(data.notification_off, common.default_notification_off),
 			progress_unwatched: common.value(data.progress_unwatched, common.default_progress_unwatched),
 			progress_watched: common.value(data.progress_watched, common.default_progress_watched),
+			progress_watching: common.value(data.progress_watching, common.default_progress_watching),
 			channels_all: common.value(data.channels_all, common.default_channels_all),
 			channels_personalized: common.value(data.channels_personalized, common.default_channels_personalized),
 			channels_none: common.value(data.channels_none, common.default_channels_none),
@@ -494,6 +495,7 @@ function main(app, common, lang, modules) {
 			notification_off,
 			progress_unwatched,
 			progress_watched,
+			progress_watching,
 			queue_top_n,
 		} = settings;
 
@@ -530,6 +532,7 @@ function main(app, common, lang, modules) {
 
 		displayQuery(browse, 'span.filter-button.progress_unwatched', display(progress_unwatched));
 		displayQuery(browse, 'span.filter-button.progress_watched', display(progress_watched));
+		displayQuery(browse, 'span.filter-button.progress_watching', display(progress_watching));
 
 		displayQuery(browse, 'span.filter-button.queue_top_n', display(queue_top_n));
 
@@ -839,11 +842,11 @@ function main(app, common, lang, modules) {
 				browse,
 				common,
 				(mode, multi, sub, browse) => {
-					changeModeProgress(mode, multi, sub, browse, filterState, common);
+					changeModeProgress(mode, true, sub, browse, filterState, common);
 					updateQueueButtonVisibility();
 				},
 				(browse) => updateVisibility(browse, filterState, lang, selectors, includesStatus, matchQuery),
-				filterState.settings.multiselection
+				true // Progress buttons are always multi-selectable
 			)
 		);
 
@@ -855,11 +858,27 @@ function main(app, common, lang, modules) {
 				browse,
 				common,
 				(mode, multi, sub, browse) => {
-					changeModeProgress(mode, multi, sub, browse, filterState, common);
+					changeModeProgress(mode, true, sub, browse, filterState, common);
 					updateQueueButtonVisibility();
 				},
 				(browse) => updateVisibility(browse, filterState, lang, selectors, includesStatus, matchQuery),
-				filterState.settings.multiselection
+				true // Progress buttons are always multi-selectable
+			)
+		);
+
+		menu.appendChild(
+			createButton(
+				common.button_label.progress_watching,
+				'progress_watching',
+				false,
+				browse,
+				common,
+				(mode, multi, sub, browse) => {
+					changeModeProgress(mode, true, sub, browse, filterState, common);
+					updateQueueButtonVisibility();
+				},
+				(browse) => updateVisibility(browse, filterState, lang, selectors, includesStatus, matchQuery),
+				true // Progress buttons are always multi-selectable
 			)
 		);
 

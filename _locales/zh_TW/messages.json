@@ -56,6 +56,9 @@
 	"button_progress_watched": {
 		"message": "已觀看"
 	},
+	"button_progress_watching": {
+		"message": "觀看中"
+	},
 	"button_keyword": {
 		"message": "關鍵字搜尋"
 	},

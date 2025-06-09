@@ -18,6 +18,7 @@ export class FilterState {
 			notification_off: false,
 			progress_unwatched: false,
 			progress_watched: false,
+			progress_watching: false,
 			channels_all: false,
 			channels_personalized: false,
 			channels_none: false,

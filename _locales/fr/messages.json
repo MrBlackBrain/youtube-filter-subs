@@ -56,6 +56,9 @@
 	"button_progress_watched": {
 		"message": "Visionné"
 	},
+	"button_progress_watching": {
+		"message": "En cours"
+	},
 	"button_keyword": {
 		"message": "Recherche par mot-clé"
 	},

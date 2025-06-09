@@ -56,6 +56,9 @@
 	"button_progress_watched": {
 		"message": "Visto"
 	},
+	"button_progress_watching": {
+		"message": "Viendo"
+	},
 	"button_keyword": {
 		"message": "Palabras clave"
 	},

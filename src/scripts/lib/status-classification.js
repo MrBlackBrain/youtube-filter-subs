@@ -90,10 +90,44 @@ export function classifyStatusProgress(node) {
 		case 'YTD-VIDEO-RENDERER':
 		case 'YTD-RICH-ITEM-RENDERER':
 		case 'YTD-PLAYLIST-VIDEO-RENDERER': {
-			const progress = node.querySelector('div#progress');
-			if (progress) {
-				status.add('progress_watched');
+			// Look for YouTube's resume playback indicator
+			const resumePlaybackRenderer = node.querySelector('ytd-thumbnail-overlay-resume-playback-renderer');
+
+			if (resumePlaybackRenderer) {
+				// Video has been started - check if it's fully watched or partially watched
+				const progressDiv = resumePlaybackRenderer.querySelector('div#progress');
+
+				if (progressDiv) {
+					// Get the width style attribute to determine progress
+					const widthStyle = progressDiv.style.width;
+
+					if (widthStyle) {
+						// Extract percentage value from width style (e.g., "100%" -> 100, "31%" -> 31)
+						const widthMatch = widthStyle.match(/(\d+(?:\.\d+)?)%/);
+
+						if (widthMatch) {
+							const widthPercentage = parseFloat(widthMatch[1]);
+
+							// If 95% or more, consider it watched; otherwise watching
+							if (widthPercentage >= 95) {
+								status.add('progress_watched');
+							} else {
+								status.add('progress_watching');
+							}
+						} else {
+							// If we can't parse the percentage, fall back to watching
+							status.add('progress_watching');
+						}
+					} else {
+						// Progress div exists but no width style - assume watching
+						status.add('progress_watching');
+					}
+				} else {
+					// Resume playback renderer exists but no progress div - assume watching
+					status.add('progress_watching');
+				}
 			} else {
+				// No resume playback renderer means the video hasn't been started
 				status.add('progress_unwatched');
 			}
 			break;

@@ -9,6 +9,7 @@ export const storage = [
 
 	'progress_unwatched',
 	'progress_watched',
+	'progress_watching',
 
 	'channels_all',
 	'channels_personalized',
@@ -28,6 +29,7 @@ export const storage = [
 
 	'default_progress_unwatched',
 	'default_progress_watched',
+	'default_progress_watching',
 
 	'default_channels_all',
 	'default_channels_personalized',
@@ -46,6 +48,7 @@ export const storage = [
 	'button_label_notification_off',
 	'button_label_progress_unwatched',
 	'button_label_progress_watched',
+	'button_label_progress_watching',
 
 	'default_keyword',
 
@@ -72,6 +75,7 @@ export const default_order = [
 
 	'progress_unwatched',
 	'progress_watched',
+	'progress_watching',
 
 	'queue_top_n',
 
@@ -104,6 +108,7 @@ export const button_label = {
 	progress_all: chrome.i18n.getMessage('button_progress_all'),
 	progress_unwatched: chrome.i18n.getMessage('button_progress_unwatched'),
 	progress_watched: chrome.i18n.getMessage('button_progress_watched'),
+	progress_watching: chrome.i18n.getMessage('button_progress_watching') || 'Watching',
 
 	channels_all: chrome.i18n.getMessage('button_channels_all'),
 	channels_personalized: chrome.i18n.getMessage('button_channels_personalized'),
@@ -144,6 +149,7 @@ export const default_notification_off = false;
 
 export const default_progress_unwatched = true;
 export const default_progress_watched = true;
+export const default_progress_watching = true;
 
 export const default_channels_all = true;
 export const default_channels_personalized = true;
@@ -176,6 +182,7 @@ export const default_default_notification_off = false;
 
 export const default_default_progress_unwatched = false;
 export const default_default_progress_watched = false;
+export const default_default_progress_watching = false;
 
 export const default_default_channels_all = false;
 export const default_default_channels_personalized = false;

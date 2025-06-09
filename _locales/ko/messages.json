@@ -56,6 +56,9 @@
 	"button_progress_watched": {
 		"message": "본 적 있는"
 	},
+	"button_progress_watching": {
+		"message": "시청중"
+	},
 	"button_keyword": {
 		"message": "키워드 검색"
 	},

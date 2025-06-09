@@ -61,12 +61,12 @@ export function createOption(text, mode) {
 	return option;
 }
 
-export function createSelectProgress(browse, changeModeProgress, updateVisibility, multiselection) {
+export function createSelectProgress(browse, changeModeProgress, updateVisibility) {
 	const select = document.createElement('select');
 	select.style.display = 'none';
 	select.classList.add('filter-menu', 'filter-menu-progress');
 	select.addEventListener('change', () => {
-		changeModeProgress(select.value, multiselection, select.querySelector('option.selected.' + select.value), browse);
+		changeModeProgress(select.value, true, select.querySelector('option.selected.' + select.value), browse);
 		updateVisibility(browse);
 		window.scroll({ top: 0, behavior: 'instant' });
 	});

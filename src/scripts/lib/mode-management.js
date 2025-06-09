@@ -78,24 +78,28 @@ export function changeMode(mode, multi, sub, browse, filterState, common) {
 }
 
 export function changeModeProgress(mode, multi, sub, browse, filterState, common) {
-	const modes = multi ? filterState.getActiveModeProgress() : new Set();
+	// Always enable multi-selection for progress buttons
+	const modes = filterState.getActiveModeProgress();
 
 	if (!mode) {
 		if (common.isSubscriptions(location.href)) {
 			if (filterState.defaultTab.progress_unwatched) modes.add('progress_unwatched');
 			if (filterState.defaultTab.progress_watched) modes.add('progress_watched');
+			if (filterState.defaultTab.progress_watching) modes.add('progress_watching');
 			if (modes.size === 0) modes.add('progress_all');
 		} else {
 			modes.add('progress_all');
 		}
 	} else {
-		if (multi && sub) {
+		// Progress buttons always use multi-selection behavior
+		if (sub) {
+			// If the button is already selected, deselect it (toggle behavior)
 			modes.delete(mode);
 			if (modes.size === 0) {
 				modes.add('progress_all');
 			}
 			// When a progress button is deselected, reset main filter to show all videos
-			if (sub && (mode === 'progress_unwatched' || mode === 'progress_watched')) {
+			if (sub && (mode === 'progress_unwatched' || mode === 'progress_watched' || mode === 'progress_watching')) {
 				const mainModes = new Set(['all']);
 				filterState.setActiveMode(mainModes, browse);
 				// Update main filter UI
@@ -117,40 +121,13 @@ export function changeModeProgress(mode, multi, sub, browse, filterState, common
 				});
 			}
 		} else {
-			// Handle single-selection mode deselection
-			if (!multi && sub && (mode === 'progress_unwatched' || mode === 'progress_watched')) {
-				// If clicking an already selected progress button in single-selection mode, deselect it
+			// Button is not currently selected, so select it
+			if (mode === 'progress_all') {
 				modes.clear();
-				modes.add('progress_all');
-				// Reset main filter to show all videos
-				const mainModes = new Set(['all']);
-				filterState.setActiveMode(mainModes, browse);
-				// Update main filter UI
-				browse
-					.querySelectorAll('span.filter-button-subscriptions, span.filter-button-channels')
-					.forEach((n) => n.classList.remove('selected'));
-				browse.querySelectorAll('span.filter-button-subscriptions.all').forEach((n) => n.classList.add('selected'));
-				browse.querySelectorAll('option.filter-button-subscriptions').forEach((n) => {
-					n.selected = false;
-					n.classList.remove('selected');
-					const i = n.innerHTML.indexOf('✔ ');
-					if (i !== -1) {
-						n.innerHTML = n.innerHTML.substring(i + 1);
-					}
-				});
-				browse.querySelectorAll('option.filter-button-subscriptions.all').forEach((n) => {
-					n.classList.add('selected');
-					n.selected = true;
-				});
 			} else {
-				// Normal selection logic
-				if (mode === 'progress_all') {
-					modes.clear();
-				} else {
-					modes.delete('progress_all');
-				}
-				modes.add(mode);
+				modes.delete('progress_all');
 			}
+			modes.add(mode);
 		}
 	}
 
@@ -158,7 +135,9 @@ export function changeModeProgress(mode, multi, sub, browse, filterState, common
 
 	// Remove selected state from all progress buttons
 	browse
-		.querySelectorAll('span.filter-button.progress_unwatched, span.filter-button.progress_watched')
+		.querySelectorAll(
+			'span.filter-button.progress_unwatched, span.filter-button.progress_watched, span.filter-button.progress_watching'
+		)
 		.forEach((n) => n.classList.remove('selected'));
 
 	browse.querySelectorAll('option.filter-button-progress').forEach((n) => {
@@ -178,18 +157,14 @@ export function changeModeProgress(mode, multi, sub, browse, filterState, common
 		browse.querySelectorAll('option.filter-button-progress.' + mode).forEach((n) => {
 			n.classList.add('selected');
 
-			if (multi) {
-				const i = n.innerHTML.indexOf('✔ ');
-				if (i === -1) {
-					n.innerHTML = '✔ ' + n.innerHTML;
-				}
+			// Always show checkmarks for progress buttons since they're always multi-selectable
+			const i = n.innerHTML.indexOf('✔ ');
+			if (i === -1) {
+				n.innerHTML = '✔ ' + n.innerHTML;
 			}
 		});
 	}
 
-	if (multi) {
-		browse.querySelectorAll('option.filter-button-progress.placeholder').forEach((n) => (n.selected = true));
-	} else {
-		browse.querySelectorAll('option.filter-button-progress.selected').forEach((n) => (n.selected = true));
-	}
+	// Always use multi-selection behavior for progress dropdowns
+	browse.querySelectorAll('option.filter-button-progress.placeholder').forEach((n) => (n.selected = true));
 }

@@ -1,0 +1,9 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+The project is a JavaScript-based Chrome extension. 
+use pnpm lint to see if there are any errors
+check out the [TODO.md](mdc:TODO.md) file to see if work done relates to any task. And update the todo if the work is finished.
+Write a task at the start if it doesn't exists.

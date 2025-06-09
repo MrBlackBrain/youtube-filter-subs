@@ -56,6 +56,9 @@
 	"button_progress_watched": {
 		"message": "Assistido"
 	},
+	"button_progress_watching": {
+		"message": "Assistindo"
+	},
 	"button_keyword": {
 		"message": "Busca por palavra-chave"
 	},

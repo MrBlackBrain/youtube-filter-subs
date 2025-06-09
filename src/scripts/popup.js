@@ -154,6 +154,19 @@ function main(common, settings, progress, data) {
 	);
 	settings_list_1.appendChild(
 		settings.createRow(
+			data.button_label_progress_watching,
+			common.button_label.progress_watching,
+			'progress_watching',
+			data.progress_watching,
+			true,
+			data.default_progress_watching ? data.default_progress_watching : false,
+			'progress',
+			(input) => chrome.storage.local.set({ button_label_progress_watching: input.value }),
+			common.button_label.clear
+		)
+	);
+	settings_list_1.appendChild(
+		settings.createRow(
 			data.button_label_queue_top_n,
 			common.button_label.queue_top_n,
 			'queue_top_n',
