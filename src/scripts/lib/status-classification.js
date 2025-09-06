@@ -89,45 +89,47 @@ export function classifyStatusProgress(node) {
 		case 'YTD-GRID-VIDEO-RENDERER':
 		case 'YTD-VIDEO-RENDERER':
 		case 'YTD-RICH-ITEM-RENDERER':
-		case 'YTD-PLAYLIST-VIDEO-RENDERER': {
-			// Look for YouTube's resume playback indicator
-			const resumePlaybackRenderer = node.querySelector('ytd-thumbnail-overlay-resume-playback-renderer');
+		case 'YTD-PLAYLIST-VIDEO-RENDERER':
+		case 'YT-LOCKUP-VIEW-MODEL': {
+			// Robust detection for YouTube's current and legacy progress UI
+			let progressPercentage = 0;
 
-			if (resumePlaybackRenderer) {
-				// Video has been started - check if it's fully watched or partially watched
-				const progressDiv = resumePlaybackRenderer.querySelector('div#progress');
-
-				if (progressDiv) {
-					// Get the width style attribute to determine progress
-					const widthStyle = progressDiv.style.width;
-
-					if (widthStyle) {
-						// Extract percentage value from width style (e.g., "100%" -> 100, "31%" -> 31)
-						const widthMatch = widthStyle.match(/(\d+(?:\.\d+)?)%/);
-
-						if (widthMatch) {
-							const widthPercentage = parseFloat(widthMatch[1]);
-
-							// If 95% or more, consider it watched; otherwise watching
-							if (widthPercentage >= 95) {
-								status.add('progress_watched');
-							} else {
-								status.add('progress_watching');
-							}
-						} else {
-							// If we can't parse the percentage, fall back to watching
-							status.add('progress_watching');
-						}
-					} else {
-						// Progress div exists but no width style - assume watching
-						status.add('progress_watching');
-					}
+			// 1) Current YouTube (2024+): segment element carries inline width: X%
+			const segment = node.querySelector(
+				'yt-thumbnail-overlay-progress-bar-view-model .ytThumbnailOverlayProgressBarHostWatchedProgressBarSegment'
+			);
+			if (segment) {
+				const widthStyle = segment.style.width || '';
+				const m = widthStyle.match(/(\d+(?:\.\d+)?)%/);
+				if (m) {
+					progressPercentage = parseFloat(m[1]);
 				} else {
-					// Resume playback renderer exists but no progress div - assume watching
-					status.add('progress_watching');
+					// Fallback: compute ratio of segment to its container
+					const container = segment.parentElement || segment.closest('.ytThumbnailOverlayProgressBarHost');
+					if (container) {
+						const segW = segment.getBoundingClientRect().width;
+						const contW = container.getBoundingClientRect().width;
+						if (contW > 0 && segW >= 0) {
+							progressPercentage = Math.max(0, Math.min(100, (segW / contW) * 100));
+						}
+					}
 				}
+			}
+
+			// 2) Legacy YouTube structure
+			if (!segment && progressPercentage === 0) {
+				const legacy = node.querySelector('ytd-thumbnail-overlay-resume-playback-renderer div#progress');
+				if (legacy) {
+					const m = (legacy.style.width || '').match(/(\d+(?:\.\d+)?)%/);
+					if (m) progressPercentage = parseFloat(m[1]);
+				}
+			}
+
+			if (progressPercentage >= 95) {
+				status.add('progress_watched');
+			} else if (progressPercentage > 0) {
+				status.add('progress_watching');
 			} else {
-				// No resume playback renderer means the video hasn't been started
 				status.add('progress_unwatched');
 			}
 			break;

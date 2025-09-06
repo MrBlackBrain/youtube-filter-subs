@@ -113,6 +113,9 @@ Promise.all([
 	});
 
 function main(app, common, lang, modules) {
+	// Debug logging to confirm extension is loading
+	console.log('🚀 YouTube Filter Extension: Main function started');
+
 	// Extract modules for easier access
 	const {
 		filterState,
@@ -153,8 +156,9 @@ function main(app, common, lang, modules) {
 
 	// Queue Top N functionality handler
 	function handleQueueTopN(browse) {
-		// Get queue count from settings panel
+		// Get queue count and reverse order setting from settings panel
 		const queueCount = filterState.settings.queue_count || common.default_queue_count;
+		const reverseOrder = filterState.settings.queue_reverse_order || common.default_queue_reverse_order;
 
 		if (!common.isSubscriptions(location.href)) {
 			// REMOVED: console.log('Not on subscriptions page, trying anyway...');
@@ -167,8 +171,8 @@ function main(app, common, lang, modules) {
 			return;
 		}
 
-		// Get all video elements from the contents container
-		const allVideoElements = contentsContainer.querySelectorAll('ytd-rich-item-renderer');
+		// Get all video elements from the contents container (support new lockup cards)
+		const allVideoElements = contentsContainer.querySelectorAll('ytd-rich-item-renderer, yt-lockup-view-model');
 
 		// Filter to only visible videos (display is not "none")
 		const visibleVideos = [];
@@ -191,8 +195,10 @@ function main(app, common, lang, modules) {
 				continue;
 			}
 
-			// Find the video title using the #video-title selector
-			const titleElement = videoElement.querySelector('#video-title');
+			// Find the video title using multiple selectors (legacy + new lockup)
+			const titleElement = videoElement.querySelector(
+				'#video-title, a.yt-lockup-metadata-view-model__title, h3.shortsLockupViewModelHostMetadataTitle, h3.shortsLockupViewModelHostOutsideMetadataTitle'
+			);
 			let videoTitle = '';
 			let videoLink = null;
 
@@ -213,37 +219,43 @@ function main(app, common, lang, modules) {
 				} else {
 					// REMOVED: console.log(`#video-title element found but no text content`);
 				}
-			} else {
-				// REMOVED: console.log(`Could not find #video-title element in video`);
+			}
+
+			// Fallback: ensure we have a link if possible
+			if (!videoLink) {
+				videoLink = videoElement.querySelector('a[href*="/watch"], a[href*="/shorts"]');
 			}
 
 			// Clean up the title (remove extra whitespace, normalize)
 			videoTitle = videoTitle.replace(/\s+/g, ' ').trim();
 
-			if (videoTitle && videoLink) {
-				// Only add if we have a valid title and haven't seen it before
-				if (!seenVideoTitles.has(videoTitle)) {
-					seenVideoTitles.add(videoTitle);
-					seenElements.add(videoElement);
-					visibleVideos.push(videoElement);
-				} else {
-					// REMOVED: console.log(`Skipping duplicate video with title: "${videoTitle}"`);
-				}
-			} else {
-				// REMOVED: console.log(`Could not find video title or link in element`);
+			// Use stable uniqueness key: prefer link href, fallback to title text
+			const uniqueKey = (videoLink && (videoLink.getAttribute('href') || videoLink.href)) || videoTitle;
+			if (uniqueKey && !seenVideoTitles.has(uniqueKey)) {
+				seenVideoTitles.add(uniqueKey);
+				seenElements.add(videoElement);
+				visibleVideos.push(videoElement);
 			}
 		}
 
+		// Get the top N videos (latest videos)
 		const topNVideos = visibleVideos.slice(0, queueCount);
 
-		if (topNVideos.length === 0) {
+		// Apply reverse order if enabled - reverse the order of queuing
+		let videosToQueue = topNVideos;
+		if (reverseOrder) {
+			// Reverse the order: queue the latest N videos but in reverse order
+			videosToQueue = [...topNVideos].reverse();
+		}
+
+		if (videosToQueue.length === 0) {
 			// REMOVED: console.log('No videos found to queue');
 			return;
 		}
 
 		let queuedCount = 0;
 
-		topNVideos.forEach((videoElement, index) => {
+		videosToQueue.forEach((videoElement, index) => {
 			// Add delay to prevent overwhelming YouTube's API
 			setTimeout(() => {
 				try {
@@ -270,17 +282,31 @@ function main(app, common, lang, modules) {
 
 						// Wait for menu to appear, then find "Add to queue" option
 						setTimeout(() => {
-							// Look for the "Add to queue" menu item by finding the text first
-							const formattedStrings = document.querySelectorAll('yt-formatted-string');
+							// Locate the "Add to queue" menu item (new sheet UI or legacy popup)
 							let addToQueueItem = null;
 
-							for (const formattedString of formattedStrings) {
-								if (formattedString.textContent && formattedString.textContent.trim() === 'Add to queue') {
-									// Found the text, now find the clickable parent
-									addToQueueItem =
-										formattedString.closest('ytd-menu-service-item-renderer') ||
-										formattedString.closest('tp-yt-paper-item');
-									break;
+							// New sheet UI (2024+)
+							const sheetTitleNodes = document.querySelectorAll(
+								'.yt-list-item-view-model__title, yt-list-item-view-model .yt-core-attributed-string[role="text"]'
+							);
+							for (const n of sheetTitleNodes) {
+								const txt = n.textContent?.trim().toLowerCase();
+								if (txt === 'add to queue') {
+									addToQueueItem = n.closest('yt-list-item-view-model');
+									if (addToQueueItem) break;
+								}
+							}
+
+							// Legacy popup
+							if (!addToQueueItem) {
+								const legacyNodes = document.querySelectorAll('yt-formatted-string');
+								for (const el of legacyNodes) {
+									const txt = el.textContent?.trim().toLowerCase();
+									if (txt === 'add to queue') {
+										addToQueueItem =
+											el.closest('ytd-menu-service-item-renderer') || el.closest('tp-yt-paper-item');
+										if (addToQueueItem) break;
+									}
 								}
 							}
 
@@ -292,9 +318,9 @@ function main(app, common, lang, modules) {
 								// Only close menu if we couldn't find the add to queue option
 								setTimeout(() => {
 									document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', keyCode: 27 }));
-								}, 50);
+								}, 100);
 							}
-						}, 300);
+						}, 400);
 					} else {
 						// REMOVED: console.log(`Could not find menu button for video ${index + 1}`);
 					}
@@ -308,10 +334,10 @@ function main(app, common, lang, modules) {
 		setTimeout(
 			() => {
 				console.log(
-					`Queue operation completed. Successfully queued ${queuedCount} out of ${topNVideos.length} video(s)`
+					`Queue operation completed. Successfully queued ${queuedCount} out of ${videosToQueue.length} video(s)`
 				);
 			},
-			topNVideos.length * 400 + 500
+			videosToQueue.length * 400 + 500
 		);
 	}
 

@@ -56,6 +56,9 @@
 	"button_progress_watched": {
 		"message": "Visto"
 	},
+	"button_progress_watching": {
+		"message": "Viendo"
+	},
 	"button_keyword": {
 		"message": "Palabras clave"
 	},
@@ -85,5 +88,14 @@
 	},
 	"keyword_notification": {
 		"message": "Notification Search"
+	},
+	"button_queue_top_n": {
+		"message": "Agregar Top N a la Cola"
+	},
+	"queue_count": {
+		"message": "Cantidad de Cola"
+	},
+	"queue_reverse_order": {
+		"message": "Orden Inverso de Cola"
 	}
 }

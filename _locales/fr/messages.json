@@ -94,5 +94,8 @@
 	},
 	"queue_count": {
 		"message": "Nombre de File"
+	},
+	"queue_reverse_order": {
+		"message": "Reverse Queue Order"
 	}
 }

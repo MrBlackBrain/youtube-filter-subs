@@ -94,5 +94,8 @@
 	},
 	"queue_count": {
 		"message": "Queue Count"
+	},
+	"queue_reverse_order": {
+		"message": "Reverse Queue Order"
 	}
 }

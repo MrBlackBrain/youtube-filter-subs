@@ -289,6 +289,15 @@ function main(common, settings, progress, data) {
 			(value) => Math.max(1, Math.min(20, parseInt(value) || common.default_queue_count))
 		)
 	);
+	settings_list_4.appendChild(
+		settings.createRow(
+			common.button_label.queue_reverse_order,
+			undefined,
+			'queue_reverse_order',
+			data.queue_reverse_order,
+			common.default_queue_reverse_order
+		)
+	);
 
 	settings_list_5.appendChild(
 		settings.createHeaderRow(common.button_label.visibility, common.button_label.default, 'header-keyword')

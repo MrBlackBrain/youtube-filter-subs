@@ -56,6 +56,9 @@
 	"button_progress_watched": {
 		"message": "Assistido"
 	},
+	"button_progress_watching": {
+		"message": "Watching"
+	},
 	"button_keyword": {
 		"message": "Pesquisa por palavra-chave"
 	},
@@ -91,5 +94,8 @@
 	},
 	"queue_count": {
 		"message": "Queue Count"
+	},
+	"queue_reverse_order": {
+		"message": "Reverse Queue Order"
 	}
 }

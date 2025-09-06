@@ -56,6 +56,9 @@
 	"button_progress_watched": {
 		"message": "Sudah ditonton"
 	},
+	"button_progress_watching": {
+		"message": "Watching"
+	},
 	"button_keyword": {
 		"message": "Pencarian kata kunci"
 	},
@@ -91,5 +94,8 @@
 	},
 	"queue_count": {
 		"message": "Queue Count"
+	},
+	"queue_reverse_order": {
+		"message": "Reverse Queue Order"
 	}
 }

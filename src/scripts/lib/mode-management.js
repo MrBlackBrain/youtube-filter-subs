@@ -86,18 +86,16 @@ export function changeModeProgress(mode, multi, sub, browse, filterState, common
 			if (filterState.defaultTab.progress_unwatched) modes.add('progress_unwatched');
 			if (filterState.defaultTab.progress_watched) modes.add('progress_watched');
 			if (filterState.defaultTab.progress_watching) modes.add('progress_watching');
-			if (modes.size === 0) modes.add('progress_all');
+			// Don't default to 'progress_all' - let it be empty to show all videos by default
 		} else {
-			modes.add('progress_all');
+			// Don't default to 'progress_all' - let it be empty to show all videos by default
 		}
 	} else {
 		// Progress buttons always use multi-selection behavior
 		if (sub) {
 			// If the button is already selected, deselect it (toggle behavior)
 			modes.delete(mode);
-			if (modes.size === 0) {
-				modes.add('progress_all');
-			}
+			// Don't add 'progress_all' when set becomes empty - let it be empty to show all videos
 			// When a progress button is deselected, reset main filter to show all videos
 			if (sub && (mode === 'progress_unwatched' || mode === 'progress_watched' || mode === 'progress_watching')) {
 				const mainModes = new Set(['all']);
@@ -165,6 +163,6 @@ export function changeModeProgress(mode, multi, sub, browse, filterState, common
 		});
 	}
 
-	// Always use multi-selection behavior for progress dropdowns
-	browse.querySelectorAll('option.filter-button-progress.placeholder').forEach((n) => (n.selected = true));
+	// Don't auto-select placeholder options - let user choose their filters
+	// browse.querySelectorAll('option.filter-button-progress.placeholder').forEach((n) => (n.selected = true));
 }

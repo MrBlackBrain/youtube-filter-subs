@@ -56,6 +56,9 @@
 	"button_progress_watched": {
 		"message": "Vu"
 	},
+	"button_progress_watching": {
+		"message": "En cours"
+	},
 	"button_keyword": {
 		"message": "Recherche par mot-clé"
 	},
@@ -85,5 +88,14 @@
 	},
 	"keyword_notification": {
 		"message": "Notification Search"
+	},
+	"button_queue_top_n": {
+		"message": "Ajouter Top N à la File"
+	},
+	"queue_count": {
+		"message": "Nombre de File"
+	},
+	"queue_reverse_order": {
+		"message": "Reverse Queue Order"
 	}
 }

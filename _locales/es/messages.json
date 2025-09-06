@@ -94,5 +94,8 @@
 	},
 	"queue_count": {
 		"message": "Cantidad de Cola"
+	},
+	"queue_reverse_order": {
+		"message": "Orden Inverso de Cola"
 	}
 }

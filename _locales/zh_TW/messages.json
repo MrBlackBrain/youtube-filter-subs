@@ -88,5 +88,14 @@
 	},
 	"keyword_notification": {
 		"message": "Notification Search"
+	},
+	"button_queue_top_n": {
+		"message": "Queue Top N"
+	},
+	"queue_count": {
+		"message": "Queue Count"
+	},
+	"queue_reverse_order": {
+		"message": "Reverse Queue Order"
 	}
 }

@@ -34,6 +34,7 @@ export class FilterState {
 			keyword_sidebar_channels: false,
 			keyword_notification: false,
 			queue_count: 3,
+			queue_reverse_order: false,
 		};
 
 		this.popupMenu = new Map();

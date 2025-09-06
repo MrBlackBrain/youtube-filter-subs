@@ -94,5 +94,8 @@
 	},
 	"queue_count": {
 		"message": "Warteschlangen Anzahl"
+	},
+	"queue_reverse_order": {
+		"message": "Warteschlangen-Reihenfolge umkehren"
 	}
 }

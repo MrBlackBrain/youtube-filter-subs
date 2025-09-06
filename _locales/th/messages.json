@@ -56,6 +56,9 @@
 	"button_progress_watched": {
 		"message": "ได้รับการชม"
 	},
+	"button_progress_watching": {
+		"message": "Watching"
+	},
 	"button_keyword": {
 		"message": "ค้นหาคำสำคัญ"
 	},
@@ -91,5 +94,8 @@
 	},
 	"queue_count": {
 		"message": "Queue Count"
+	},
+	"queue_reverse_order": {
+		"message": "Reverse Queue Order"
 	}
 }

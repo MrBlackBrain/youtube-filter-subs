@@ -5,12 +5,15 @@ export function updateVisibility(node, filterState, lang, selectors, includesSta
 }
 
 export function updateTargetVisibility(node, filterState, lang, includesStatus, matchQuery) {
+	const activeMode = filterState.getActiveMode();
+	const activeModeProgress = filterState.getActiveModeProgress();
+
 	if (node.classList.contains('filter-separator')) {
 		node.style.display = '';
 		node.classList.add('filter-show');
 		node.classList.remove('filter-hidden');
 	} else if (
-		includesStatus(node, filterState.getActiveMode(), filterState.getActiveModeProgress(), lang) &&
+		includesStatus(node, activeMode, activeModeProgress, lang) &&
 		matchTextContent(node, filterState, matchQuery)
 	) {
 		node.style.display = '';

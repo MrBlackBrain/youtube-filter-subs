@@ -62,6 +62,7 @@ export const storage = [
 	'default_queue_top_n',
 	'button_label_queue_top_n',
 	'queue_count',
+	'queue_reverse_order',
 ];
 
 export const default_order = [
@@ -137,6 +138,7 @@ export const button_label = {
 
 	queue_top_n: chrome.i18n.getMessage('button_queue_top_n') || 'Queue Top N',
 	queue_count: chrome.i18n.getMessage('queue_count') || 'Queue Count',
+	queue_reverse_order: chrome.i18n.getMessage('queue_reverse_order') || 'Reverse Queue Order',
 };
 
 export const default_live = true;
@@ -166,6 +168,7 @@ export const default_keyword_notification = true;
 
 export const default_queue_top_n = true;
 export const default_queue_count = 3;
+export const default_queue_reverse_order = false;
 
 export const defaultLimit = 500;
 export const minLimit = 100;

@@ -94,5 +94,8 @@
 	},
 	"queue_count": {
 		"message": "Conteggio Coda"
+	},
+	"queue_reverse_order": {
+		"message": "Reverse Queue Order"
 	}
 }
