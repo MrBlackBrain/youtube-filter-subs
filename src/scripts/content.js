@@ -60,7 +60,7 @@ Promise.all([
 						createQueueTopNButton,
 					} = uiModule;
 					const { changeMode, changeModeProgress } = modeModule;
-					const { includesStatus } = statusModule;
+					const { includesStatus, classifyStatus } = statusModule;
 
 					main(document.querySelector('ytd-app') ?? document.body, common, lang, {
 						filterState,
@@ -101,6 +101,7 @@ Promise.all([
 						changeMode,
 						changeModeProgress,
 						includesStatus,
+						classifyStatus,
 					});
 				})
 				.catch((error) => {
@@ -150,6 +151,7 @@ function main(app, common, lang, modules) {
 		changeMode,
 		changeModeProgress,
 		includesStatus,
+		classifyStatus,
 	} = modules;
 	// Initialize shared UI elements
 	const load_button_container = createLoadButtonContainer(common, filterState);
@@ -192,6 +194,13 @@ function main(app, common, lang, modules) {
 			// Skip if we've already processed this exact element
 			if (seenElements.has(videoElement)) {
 				// REMOVED: console.log(`Skipping already processed element`);
+				continue;
+			}
+
+			// Filter out shorts - only queue regular videos
+			const nodeStatus = classifyStatus(videoElement, lang);
+			if (nodeStatus.has('short')) {
+				// Skip shorts - we only want to queue regular videos
 				continue;
 			}
 
@@ -303,8 +312,7 @@ function main(app, common, lang, modules) {
 								for (const el of legacyNodes) {
 									const txt = el.textContent?.trim().toLowerCase();
 									if (txt === 'add to queue') {
-										addToQueueItem =
-											el.closest('ytd-menu-service-item-renderer') || el.closest('tp-yt-paper-item');
+										addToQueueItem = el.closest('ytd-menu-service-item-renderer') || el.closest('tp-yt-paper-item');
 										if (addToQueueItem) break;
 									}
 								}

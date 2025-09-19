@@ -5,10 +5,13 @@ export function classifyStatus(node, lang) {
 		case 'YTD-GRID-VIDEO-RENDERER':
 		case 'YTD-VIDEO-RENDERER':
 		case 'YTD-RICH-ITEM-RENDERER':
-		case 'YTD-PLAYLIST-VIDEO-RENDERER': {
+		case 'YTD-PLAYLIST-VIDEO-RENDERER':
+		case 'YT-LOCKUP-VIEW-MODEL': {
+			// Check for live/streamed/scheduled content first
 			const metadata_line = node.querySelector('div#metadata-line');
 			const byline_container = node.querySelector('div#byline-container');
 			const badge = node.querySelector('p.ytd-badge-supported-renderer');
+
 			if (metadata_line || byline_container || badge) {
 				const t = (metadata_line?.textContent ?? '') + '\n' + (byline_container?.textContent ?? '');
 				const l = badge?.textContent ?? '';
@@ -29,30 +32,12 @@ export function classifyStatus(node, lang) {
 						}
 					}
 				} else {
-					const thumbnail_overlay = node.querySelector('ytd-thumbnail-overlay-time-status-renderer');
-					if (thumbnail_overlay) {
-						const overlay_style = thumbnail_overlay.getAttribute('overlay-style');
-						if (overlay_style) {
-							if (overlay_style === 'DEFAULT') {
-								status.add('video');
-							} else if (overlay_style === 'SHORTS') {
-								status.add('short');
-							} else {
-								status.add('video'); // membership only video
-							}
-						}
-					}
-
-					const slim_media = node.querySelector('ytd-rich-grid-slim-media');
-					if (slim_media) {
-						status.add('short');
-					}
+					// Check for video vs shorts classification
+					classifyVideoOrShort(node, status);
 				}
 			} else {
-				const shorts = node.querySelector('ytm-shorts-lockup-view-model-v2');
-				if (shorts) {
-					status.add('short');
-				}
+				// Check for video vs shorts classification
+				classifyVideoOrShort(node, status);
 			}
 			break;
 		}
@@ -116,8 +101,20 @@ export function classifyStatusProgress(node) {
 				}
 			}
 
-			// 2) Legacy YouTube structure
+			// 2) Alternative selector for current YouTube layout
 			if (!segment && progressPercentage === 0) {
+				const altSegment = node.querySelector('.ytThumbnailOverlayProgressBarHostWatchedProgressBarSegment');
+				if (altSegment) {
+					const widthStyle = altSegment.style.width || '';
+					const m = widthStyle.match(/(\d+(?:\.\d+)?)%/);
+					if (m) {
+						progressPercentage = parseFloat(m[1]);
+					}
+				}
+			}
+
+			// 3) Legacy YouTube structure
+			if (progressPercentage === 0) {
 				const legacy = node.querySelector('ytd-thumbnail-overlay-resume-playback-renderer div#progress');
 				if (legacy) {
 					const m = (legacy.style.width || '').match(/(\d+(?:\.\d+)?)%/);
@@ -125,6 +122,7 @@ export function classifyStatusProgress(node) {
 				}
 			}
 
+			// Classify based on progress percentage
 			if (progressPercentage >= 95) {
 				status.add('progress_watched');
 			} else if (progressPercentage > 0) {
@@ -169,4 +167,76 @@ export function includesStatusProgress(node, status) {
 		}
 		return false;
 	}
+}
+
+// Helper function to classify video vs shorts based on current YouTube layout
+function classifyVideoOrShort(node, status) {
+	// Check for shorts-specific elements first
+	const shorts = node.querySelector('ytm-shorts-lockup-view-model-v2');
+	if (shorts) {
+		status.add('short');
+		return;
+	}
+
+	// Check for slim media (shorts indicator)
+	const slim_media = node.querySelector('ytd-rich-grid-slim-media');
+	if (slim_media) {
+		status.add('short');
+		return;
+	}
+
+	// Check for shorts-specific attributes
+	const shortsIndicator = node.querySelector('[is-shorts], [data-shorts], .shorts-indicator');
+	if (shortsIndicator) {
+		status.add('short');
+		return;
+	}
+
+	// Check overlay style for shorts
+	const thumbnail_overlay = node.querySelector('ytd-thumbnail-overlay-time-status-renderer');
+	if (thumbnail_overlay) {
+		const overlay_style = thumbnail_overlay.getAttribute('overlay-style');
+		if (overlay_style === 'SHORTS') {
+			status.add('short');
+			return;
+		}
+	}
+
+	// Check duration badge to determine if it's a short
+	// Shorts typically have very short durations (under 60 seconds)
+	const durationBadge = node.querySelector('badge-shape .yt-badge-shape__text');
+	if (durationBadge) {
+		const durationText = durationBadge.textContent?.trim();
+		if (durationText) {
+			// Parse duration like "3:56", "0:45", "1:23"
+			const durationMatch = durationText.match(/^(\d+):(\d+)$/);
+			if (durationMatch) {
+				const minutes = parseInt(durationMatch[1]);
+				const seconds = parseInt(durationMatch[2]);
+				const totalSeconds = minutes * 60 + seconds;
+
+				// If duration is 60 seconds or less, it's likely a short
+				if (totalSeconds <= 60) {
+					status.add('short');
+					return;
+				}
+			}
+		}
+	}
+
+	// Check for aspect ratio - shorts are typically 9:16 (vertical)
+	const thumbnail = node.querySelector('yt-thumbnail-view-model');
+	if (thumbnail) {
+		// Check if it has vertical aspect ratio classes
+		const hasVerticalClass =
+			thumbnail.classList.contains('ytThumbnailViewModelAspectRatio9By16') ||
+			thumbnail.classList.contains('ytThumbnailViewModelAspectRatioVertical');
+		if (hasVerticalClass) {
+			status.add('short');
+			return;
+		}
+	}
+
+	// Default to video if no shorts indicators found
+	status.add('video');
 }
